@@ -1,1 +1,3 @@
-# nem2-sdk-php
+# nemsdk-php
+
+include nem-sdk.php
