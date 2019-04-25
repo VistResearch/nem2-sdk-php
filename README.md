@@ -5,8 +5,8 @@ include nem-sdk.php
 
 ## Core
 
-Implement keypair model＜/br＞
-sodium_compat is simplified from https://github.com/paragonie/sodium_compat＜/br＞
+Implement keypair model </br>
+sodium_compat is simplified from https://github.com/paragonie/sodium_compat </br>
 
 ## Model
 
