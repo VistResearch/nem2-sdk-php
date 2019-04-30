@@ -3,12 +3,12 @@
 include nem-sdk.php
 
 
-# Core
+## Core
 
-Implement keypair model＜/br＞
-sodium_compat is simplified from https://github.com/paragonie/sodium_compat＜/br＞
+Implement keypair model </br>
+sodium_compat is simplified from https://github.com/paragonie/sodium_compat </br>
 
-# Model
+## Model
 
 Not finished yet:＜/br＞
 - Account/Account.php
@@ -16,6 +16,6 @@ Not finished yet:＜/br＞
 - All about DTO and Catbuffer
 
 
-# Util
+## Util
 
 These model are not used yet, it is save to change them.
