@@ -1,5 +1,5 @@
 {
-    "name": "VistResearch/nem2-sdk-php",
+    "name": "vistresearch/nem2-sdk-php",
     "description": "Composer Package for PHP (Laravel or Pure PHP), Wrapper to use the NEM blockchain SDK with NIS compatibility.",
     "license": "Apache2.0",
     "repositories": [
@@ -12,8 +12,8 @@
         "php": ">=7.3.4"
     },
     "autoload": {
-        "psr-4": {
-            "NEM\\": "src/"
+        "classmap": {
+            "NEM"
         }
     },
     "autoload-dev": {

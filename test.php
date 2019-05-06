@@ -1,13 +1,9 @@
 <?php
 
 
-include 'nem-sdk.php';
-require_once "src\\"."innerLoader.php";
+require 'vendor/autoload.php';
 
-$a = UInt64::fromUint(123456);
-
-
-var_dump(true);
+NEM\Models\Blockchain\BlockchainScore::forTest();
 
 // print(PropertyModifica/tionType::Remove);
 // $a = new EmptyAlias();

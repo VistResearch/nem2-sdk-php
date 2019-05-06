@@ -1,7 +1,8 @@
 <?php
 
-class base32
-{
+namespace NEM\util\Base32
+
+class Base32{
     const BITS_5_RIGHT = 31;
     const CHARS = 'abcdefghijklmnopqrstuvwxyz234567'; // lower-case
     
