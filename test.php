@@ -3,7 +3,9 @@
 
 require 'vendor/autoload.php';
 
-NEM\Models\Blockchain\BlockchainScore::forTest();
+
+$a = NEM\Models\Transaction\Message::decodeHex("31bacdb921");
+print_r($a);
 
 // print(PropertyModifica/tionType::Remove);
 // $a = new EmptyAlias();

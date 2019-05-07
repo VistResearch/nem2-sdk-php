@@ -17,6 +17,7 @@ class BlockchainScore{
     static function forTest(){
         echo "string\n";
     }
+
     // public function toDTO(): Array {
     //     $nameList =  get_class_vars(get_class($this));
     //     $Dto = [];
