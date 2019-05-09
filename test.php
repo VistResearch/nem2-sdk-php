@@ -4,7 +4,7 @@
 require 'vendor/autoload.php';
 
 
-$a = NEM\Models\Transaction\Message::decodeHex("31bacdb921");
+$a = NEM\Models\Transaction\TransactionType::TRANSFER;
 print_r($a);
 
 // print(PropertyModifica/tionType::Remove);

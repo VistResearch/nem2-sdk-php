@@ -21,94 +21,94 @@ class TransactionVersion {
      * Transfer Transaction transaction version.
      * @type {number}
      */
-    public static TRANSFER = 3;
+    const TRANSFER = 3;
 
     /**
      * Register namespace transaction version.
      * @type {number}
      */
-    public static REGISTER_NAMESPACE = 2;
+    const REGISTER_NAMESPACE = 2;
 
     /**
      * Mosaic definition transaction version.
      * @type {number}
      */
-    public static MOSAIC_DEFINITION = 3;
+    const MOSAIC_DEFINITION = 3;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    public static MOSAIC_SUPPLY_CHANGE = 2;
+    const MOSAIC_SUPPLY_CHANGE = 2;
 
     /**
      * Modify multisig account transaction version.
      * @type {number}
      */
-    public static MODIFY_MULTISIG_ACCOUNT = 3;
+    const MODIFY_MULTISIG_ACCOUNT = 3;
 
     /**
      * Aggregate complete transaction version.
      * @type {number}
      */
-    public static AGGREGATE_COMPLETE = 2;
+    const AGGREGATE_COMPLETE = 2;
 
     /**
      * Aggregate bonded transaction version
      */
-    public static AGGREGATE_BONDED = 2;
+    const AGGREGATE_BONDED = 2;
 
     /**
      * Lock transaction version
      * @type {number}
      */
-    public static LOCK = 1;
+    const LOCK = 1;
 
     /**
      * Secret Lock transaction version
      * @type {number}
      */
-    public static SECRET_LOCK = 1;
+    const SECRET_LOCK = 1;
 
     /**
      * Secret Proof transaction version
      * @type {number}
      */
-    public static SECRET_PROOF = 1;
+    const SECRET_PROOF = 1;
 
     /**
      * Address Alias transaction version
      * @type {number}
      */
-    public static ADDRESS_ALIAS = 1;
+    const ADDRESS_ALIAS = 1;
 
     /**
      * Mosaic Alias transaction version
      * @type {number}
      */
-    public static MOSAIC_ALIAS = 1;
+    const MOSAIC_ALIAS = 1;
 
     /**
      * Account Property address transaction version
      * @type {number}
      */
-    public static MODIFY_ACCOUNT_PROPERTY_ADDRESS = 1;
+    const MODIFY_ACCOUNT_PROPERTY_ADDRESS = 1;
 
     /**
      * Account Property mosaic transaction version
      * @type {number}
      */
-    public static MODIFY_ACCOUNT_PROPERTY_MOSAIC = 1;
+    const MODIFY_ACCOUNT_PROPERTY_MOSAIC = 1;
 
     /**
      * Account Property entity type transaction version
      * @type {number}
      */
-    public static MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 1;
+    const MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 1;
 
     /**
      * Link account transaction version
      * @type {number}
      */
-    public static LINK_ACCOUNT = 2;
+    const LINK_ACCOUNT = 2;
 }
