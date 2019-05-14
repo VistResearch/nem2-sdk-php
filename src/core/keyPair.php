@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) ."\\sodium_compat\\autoload.php";
 
-namespace NEM\core;
+namespace NEM\Core;
 
 use \ParagonIE_Sodium_Core32_Ed25519 as Ed25519_32;
 use \ParagonIE_Sodium_Core_Ed25519 as Ed25519;

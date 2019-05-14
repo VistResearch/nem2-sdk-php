@@ -21,14 +21,12 @@ class Deadline {
     public $value; // LocalDateTime;
 
     /**
-     * Create deadline model
+     * Create deadline object from how long we can wait (in sec)
      * @param deadline
      * @param chronoUnit
      * @returns {Deadline}
      */
     public static function create(int $deadline): Deadline {
-        $deadline = $deadline - Deadline::timestampNemesisBlock;
-
         if ($deadline <= 0) {
             throw new Error('deadline should be greater than 0');
         } else if ($deadline > 86400) {
@@ -54,16 +52,14 @@ class Deadline {
     /**
      * @param deadline
      */
-    private function __construct($deadline: LocalDateTime) {
+    private function __construct(int $deadline) {
         $this->value = $deadline;
     }
 
-    // /**
-    //  * @internal
-    //  */
-    // public toDTO(): number[] {
-    //     return UInt64.fromUint(
-    //         (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
-    //     ).toDTO();
-    // }
+    /**
+     * @internal
+     */
+    public toDTO():  {
+        return UInt64::fromUint($this->value + Deadline::timestampNemesisBlock).toDTO();
+    }
 }

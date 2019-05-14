@@ -1,5 +1,14 @@
 <?php
 
+namespace NEM\Models\Transaction;
+
+use NEM\Models\Transaction\Deadline;
+use NEM\Models\UInt64;
+use NEM\Models\Account\PublicAccount;
+use NEM\Models\Transaction\SignedTransaction;
+use NEM\Models\Transaction\TransactionInfo;
+use NEM\Models\Transaction\AggregateTransactionInfo;
+
 abstract class Transaction{
 
 	/**
@@ -36,13 +45,21 @@ abstract class Transaction{
      */
     public $transactionInfo; //?: TransactionInfo | AggregateTransactionInfo
 
-    function __construct($type, NetworkType $networkType, $version, Deadline $deadline,
+    function __construct($type, int $networkType, $version, Deadline $deadline,
     				UInt64 $maxFee, string $signature = "", PublicAccount $signer = null,
 						$transactionInfo = null ) {
     	if(! ( ($transactionInfo instanceof TransactionInfo) 
     		|| ($transactionInfo instanceof AggregateTransactionInfo) ) ){
     		$this->transactionInfo = $transactionInfo;
     	}
+        $this->type = $type;
+        $this->networkType = $networkType;
+        $this->version = $version;
+        $this->deadline = $deadline;
+        $this->maxFee = $maxFee;
+        $this->signature = $signature;
+        $this->signer = $signer;
+        $this->transactionInfo = $transactionInfo;
     }
 
     /**

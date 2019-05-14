@@ -83,4 +83,8 @@ class UInt64 {
     public function equals(UInt64 $other): bool {
         return $this->lower === $other->lower && $this->higher === $other->higher;
     }
+
+    public function toDTO(): Array{
+        return [$this->higher,$this->lower];
+    }
 }
