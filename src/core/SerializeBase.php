@@ -62,22 +62,22 @@ class SerializeBase{
         return $uint8;
     }
 
-    public static function serializeInt(int $number = null)
-    {
+    // public static function serializeInt(int $number = null)
+    // {
 
-        if (null === $number) {
-            return $this->serializeInt(self::NULL_SENTINEL);
-        }
-        else {
-            $uint8 = [
-                $number         & 0xff,
-                ($number >> 8)  & 0xff,
-                ($number >> 16) & 0xff,
-                ($number >> 24) & 0xff
-            ];
-        }
-        return $uint8;
-    }
+    //     if (null === $number) {
+    //         return $this->serializeInt(self::NULL_SENTINEL);
+    //     }
+    //     else {
+    //         $uint8 = [
+    //             $number         & 0xff,
+    //             ($number >> 8)  & 0xff,
+    //             ($number >> 16) & 0xff,
+    //             ($number >> 24) & 0xff
+    //         ];
+    //     }
+    //     return $uint8;
+    // }
 
     public function serializeString(string $str = null)
     {

@@ -4,14 +4,14 @@
 require 'vendor/autoload.php';
 
 
-// $a = NEM\Core\Serializer::serializeString("我");
-// print_r($a);
-// $a = "abc";
-// $bb = (int)$a;
-// print_r($bb);
+$a = NEM\Core\SerializeBase::serializeString("我");
+print_r($a);
 
-$t=time();
-echo($t . "\n"."1459468800"."\n");
+// $t=time();
+// echo($t . "\n"."1459468800"."\n");
+
+// $a = NEM\util\Base32::decode("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3");
+// var_dump($a);
 
 // print(strlen(hex2bin(unpack("H*", hex2bin("b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf"))[1])));
 

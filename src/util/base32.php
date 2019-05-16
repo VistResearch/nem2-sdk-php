@@ -1,6 +1,6 @@
 <?php
 
-namespace NEM\util\Base32
+namespace NEM\util;
 
 class Base32{
     const BITS_5_RIGHT = 31;
@@ -42,13 +42,14 @@ class Base32{
         return $res;
     }
     
-    public static function decode($data)
+    public static function decode2Array($data)
     {
         $data = rtrim($data, "=\x20\t\n\r\0\x0B");
         $dataSize = strlen($data);
         $buf = 0;
         $bufSize = 0;
-        $res = '';
+        // $res = '';
+        $res = [];
         $charMap = array_flip(str_split(static::CHARS)); // char=>value map
         $charMap += array_flip(str_split(strtoupper(static::CHARS))); // add upper-case alternatives
         
@@ -68,7 +69,8 @@ class Base32{
             {
                 $bufSize -= 8;
                 $b = ($buf & (0xff << $bufSize)) >> $bufSize;
-                $res .= chr($b);
+                // $res .= chr($b);
+                array_push ($res, $b);
             }
         }
         

@@ -3,8 +3,10 @@
 namespace NEM\Core;
 
 use NEM\Core\SerializeBase;
+use NEM\util\Base32;
 
 class Serializer{
+	// All method return a list of int between 0 ~ 255
 	const NULL_SENTINEL = 0xffffffff;
 
 	private $data;
@@ -23,9 +25,11 @@ class Serializer{
 		$this->data.setAttribute("Fee",SerializeBase::serializeUInt8($Fee));
 	}
 
-	public function addAddress(string $Address){
-		// 'TODO'
+	// address as plain, ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3
+	public function addRecipient(string $Address){
+		$this->data.setAttribute("Recipient",Base32::decode("Address"));
 	}
 
+	public function 
 
 }
