@@ -27,7 +27,7 @@ class Serializer{
 
 	// address as plain, ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3
 	public function addRecipient(string $Address){
-		$this->data.setAttribute("Recipient",Base32::decode("Address"));
+		$this->data.setAttribute("Recipient",Base32::decode($Address,"array"));
 	}
 
 	public function 
