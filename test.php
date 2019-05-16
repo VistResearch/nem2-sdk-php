@@ -6,7 +6,7 @@ require 'vendor/autoload.php';
 
 $a = NEM\Core\SerializeBase::serializeString("我");
 print_r($a);
-
+VAR_DUMP(array_merge([0,0,0,0],$a));
 // $t=time();
 // echo($t . "\n"."1459468800"."\n");
 

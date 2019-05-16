@@ -24,4 +24,9 @@ class Message{
 		}
 		return $returnValue;
 	}
+
+	public function toDTO(): Array{
+		return ["type" => $this->type,
+				"payload" => $this->payload ];
+	}
 }

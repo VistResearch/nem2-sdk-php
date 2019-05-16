@@ -2,6 +2,7 @@
 
 namespace NEM\Models\Namespace;
 
+use NEM\Models\Id;
 
 class NamespaceId {
 
@@ -21,7 +22,7 @@ class NamespaceId {
      *
      * @param id
      */
-    function __construct($id) {
+    function __construct(Id $id) {
         if (is_array ($id)) {
             $this->id = new Id($id);
         } else if (is_string($id)) {

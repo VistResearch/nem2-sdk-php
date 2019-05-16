@@ -85,6 +85,6 @@ class UInt64 {
     }
 
     public function toDTO(): Array{
-        return [$this->higher,$this->lower];
+        return [$this->lower,$this->higher];
     }
 }

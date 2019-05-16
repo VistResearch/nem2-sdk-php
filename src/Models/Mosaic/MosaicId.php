@@ -2,6 +2,8 @@
 
 namespace NEM\Models\Mosiac;
 
+use NEM\Models\Id;
+
 class MosaicId{
 
 	public $id; // Id

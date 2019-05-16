@@ -1,13 +1,16 @@
 <?php 
-require_once dirname(__FILE__) ."\\..\\..\\innerLoader.php";
+
+namespace NEM\Models;
+
+use NEM\Models\UInt64;
 
 class Id extends UInt64 {
-    public static function fromHex(string $hexId): Id {
-        $higher = parseInt(hexId.substr(0, 8), 16);
-        $lower = parseInt(hexId.substr(8, 8), 16);
+    // public static function fromHex(string $hexId): Id {
+    //     $higher = parseInt(hexId.substr(0, 8), 16);
+    //     $lower = parseInt(hexId.substr(8, 8), 16);
 
-        return new Id([lower, higher]);
-    }
+    //     return new Id([lower, higher]);
+    // }
 
     /**
      * Get string value of id

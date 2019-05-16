@@ -7,21 +7,6 @@ namespace NEM\Core;
 
 class SerializeBase{
 
-	public static function serializeUInt8(array $uint8Str = null)
-    {
-        if (null === $uint8Str) {
-            $uint8 = $this->serializeInt(null);
-        }
-        else {
-            // prepend size on 4 bytes
-            $count = count($uint8Str);
-            $uint8 = $this->serializeInt($count);
-            for ($i = 0; $i < $count; $i++) {
-                array_push($uint8, $uint8Str[$i]);
-            }
-        }
-        return $uint8;
-    }
 
  	public static function serializeLong(int $long = null)
     {
@@ -45,6 +30,23 @@ class SerializeBase{
         return $uint8;
     }
 
+    public static function serializeUInt64(Array $UInt64)
+    {
+
+
+        $uint64 = [
+            ($UInt64[1] >> 24) & 0xff,
+            ($UInt64[1] >> 16)  & 0xff,
+            ($UInt64[1] >> 8 ) & 0xff,
+            ($UInt64[1] >> 0 ) & 0xff,
+            ($UInt64[0] >> 24)  & 0xff,
+            ($UInt64[0] >> 16)  & 0xff,
+            ($UInt64[0] >> 8 ) & 0xff,
+            ($UInt64[0] >> 0 ) & 0xff
+        ];
+        return $uint64;
+    }
+
     public static function serializeInt(int $number = null)
     {
 
@@ -62,22 +64,22 @@ class SerializeBase{
         return $uint8;
     }
 
-    // public static function serializeInt(int $number = null)
-    // {
+    public static function parseInt(int $number = null)
+    {
 
-    //     if (null === $number) {
-    //         return $this->serializeInt(self::NULL_SENTINEL);
-    //     }
-    //     else {
-    //         $uint8 = [
-    //             $number         & 0xff,
-    //             ($number >> 8)  & 0xff,
-    //             ($number >> 16) & 0xff,
-    //             ($number >> 24) & 0xff
-    //         ];
-    //     }
-    //     return $uint8;
-    // }
+        if (null === $number) {
+            return $this->serializeInt(self::NULL_SENTINEL);
+        }
+        else {
+            $uint8 = [
+                ($number >> 24)  & 0xff,
+                ($number >> 16)  & 0xff,
+                ($number >> 8 ) & 0xff,
+                ($number >> 0 ) & 0xff
+            ];
+        }
+        return $uint8;
+    }
 
     public function serializeString(string $str = null)
     {
@@ -88,7 +90,7 @@ class SerializeBase{
     	else{
 			// prepend size on 4 bytes
 			$count = strlen($str);
-			$uint8 = self::serializeInt($count);
+            $uint8 = [];
 
 			// UTF-8 to binary
 			for ($i = 0; $i < $count; $i++) {

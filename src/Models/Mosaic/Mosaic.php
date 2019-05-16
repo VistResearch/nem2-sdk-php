@@ -11,7 +11,7 @@ class Mosaic{
 	public $id; // MosaicId or NamespaceId
 
 
-	function __construct(UInt64 $amount,$id){
+	function __construct(UInt64 $amount, $id){
         if(!($id instanceof MosaicId || $id instanceof NamespaceId)){
             throw new Exception("Wrong data type: Mosaic->id\n");
         }
@@ -30,14 +30,10 @@ class Mosaic{
 
 
 
-	// public function toDTO(): Array {
- //        $nameList =  get_class_vars(get_class($this));
- //        $Dto = [];
- //        foreach ($nameList as $key => $value) {
- //            $Dto[$key] = $this->$key;
- //        }
- //        return $Dto;
- //    }
+	public function toDTO(): Array {
+        return ["amonut" => $this->amount.toDTO(),
+                "id" => $this->id->id->toDTO()]
+    }
 
  //    public function FromDTO($DTOArray){
  //        foreach ($DTOArray as $key => $value) {
