@@ -50,7 +50,7 @@ class Serializer{
 		$this->data.setAttribute("MosaicNum",sizeof($mosaicArra));
 	}
 
-	public function buildTransferTransactionArray(){
+	public function buildTransferTransaction(){
 		foreach (self::TransferTransactionElements as $key => $value) {
 			if (!array_key_exists($value,$this->data)){
 				throw new Exception("Transfer Transaction need " . $value . " to be set.\n");
@@ -80,7 +80,7 @@ class Serializer{
 												$Mosaic);
 
 		array_merge($output, $version, $type, $Transaction, $TransferTransactionBody);
-		return $output;
+		return $TransferTransactionBody;
 	}
 
 
