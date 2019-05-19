@@ -17,7 +17,7 @@ class Serializer{
 	}
 
 	// Need Uint64 DTO Array as input
-	public function addDeadline(Array $Dearline){
+	public function addDeadline(Array $Deadline){
 		$this->data.setAttribute("Deadline",SerializeBase::serializeUInt8($Deadline));
 	}
 
@@ -81,6 +81,34 @@ class Serializer{
 
 		array_merge($output, $version, $type, $Transaction, $TransferTransactionBody);
 		return $TransferTransactionBody;
+	}
+
+	// input are public key string
+	public function addRemoteAccountKey(string $key){
+		$this->data.setAttribute("RemoteAccountKey",unpack("C*",hex2bin($key)));
+
+	}
+
+	// input will only be 0 or 1
+	public function addAccountLinkAction(int $action){
+		$this->data.setAttribute("AccountLinkAction",SerializeBase::parseInt($action));
+	}
+
+	public function buildAccountLinkTransaction(){
+		$this->data = [];
+
+		$version = $this->data->Version;
+		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0X4154));
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody);
+
+		$AccountLinkTransactionBody = array_merge($this->data->RemoteAccountKey,$this->data->AccountLinkAction);
+
+		$this->data = array_merge($version,$type,$Transaction,$AccountLinkTransactionBody);
+
+		return $AccountLinkTransactionBody;
+
 	}
 
 

@@ -6,8 +6,9 @@ use NEM\util\Base32;
 
 // $a = NEM\Core\SerializeBase::serializeString("我");
 // print_r($a);
-$a = Base32::decode("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3","array");
-VAR_DUMP($a);
+// $a = Base32::decode("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3","array");
+// VAR_DUMP($a);
+var_dump(unpack("C*",hex2bin("12345678")));
 // VAR_DUMP(array_merge([0,0,0,0],$a));
 // $t=time();
 // echo($t . "\n"."1459468800"."\n");
