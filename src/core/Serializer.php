@@ -255,4 +255,49 @@ class Serializer{
 
 		return $SecretProofTransactionBody;
 	}
+
+	public function addNamespaceType(int $type){
+		$this->data["NamespaceType"] = SerializeBase::serializeUInt8($type);
+	}
+
+	public function addNamespaceId(Array $Id){
+		$this->data["NamespaceId"] = SerializeBase::serializeUInt64($Id);
+	}
+
+	public function addNamespaceName(string $name){
+		$this->data["NamespaceName"] = SerializeBase::serializeString($name);
+		$this->data["NamespaceNameSize"] = strlen($name);
+	}
+
+	public function addParentId(Array $Id){
+		$this->data["ParentId"] = SerializeBase::serializeUInt64($Id);
+	}
+
+	public function buildRegisterNamespaceTransaction(): Array{
+		$version = SerializeBase::serializeUInt8(2);
+		$type = SerializeBase::serializeUInt16(0x414E);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$SecretProofTransactionBody = [];
+		
+		if (array_key_exists("ParentId",$this->data){
+			$op = $this->data["ParentId"];
+		}
+		else{
+			$op = $this->data["Duration"];
+		}
+
+		$RegisterNamespaceTransactionBody = array_merge($this->data["NamespaceType"],
+												$op,
+												$this->data["NamespaceId"],
+												$this->data["NamespaceNameSize"],
+												$this->data["NamespaceName"]);
+
+		$tx = array_merge($version,$type,$Transaction,$RegisterNamespaceTransactionBody);
+
+		return $RegisterNamespaceTransactionBody;		
+	}
 }
