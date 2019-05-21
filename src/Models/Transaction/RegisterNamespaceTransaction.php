@@ -175,12 +175,12 @@ class RegisterNamespaceTransaction extends Transaction {
 
 
         if ($this->namespaceType === NamespaceType::RootNamespace) {
-            $s.addDuration($this->duration->toDTO());
+            $s->addDuration($this->duration->toDTO());
         } else {
-            $s.addParentId($this->parentId->id->toDTO());
+            $s->addParentId($this->parentId->id->toDTO());
         }
 
-        return $s.buildRegisterNamespaceTransaction();
+        return $s->buildRegisterNamespaceTransaction();
     }
 
 }
