@@ -13,7 +13,7 @@ class Serializer{
 	private $data;
 
 	function __construct(){
-		$this->data = [];
+		$this->data = ["Version"=> SerializeBase::serializeUInt8(3)];
 	}
 
 	// Need Uint64 DTO Array as input
@@ -59,7 +59,7 @@ class Serializer{
 		$output = [];
 
 		$type = SerializeBase::serializeUInt16(0X4154);
-		$version = $this->data->Version;
+		$version = SerializeBase::serializeUInt8(3);
 
 		// Tx = SizePrefixedEntity(uint32) + VerifiableEntity(binary_fixed(64)) + EntityBody(binary_fixed(32) + version + type)\\
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
@@ -95,9 +95,7 @@ class Serializer{
 	}
 
 	public function buildAccountLinkTransaction(){
-		$this->data = [];
-
-		$version = $this->data->Version;
+		$version = SerializeBase::serializeUInt8(2);
 		$type = SerializeBase::serializeUInt16(0x414C);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
@@ -118,9 +116,7 @@ class Serializer{
 	}
 
 	public function buildAccountPropertiesAddressTransaction(){
-		$this->data = [];
-
-		$version = $this->data->Version;
+		$version = SerializeBase::serializeUInt8(1);
 		$type = SerializeBase::serializeUInt16(0x4150);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
@@ -161,9 +157,8 @@ class Serializer{
 	}
 
 	public function buildModifyMultisigAccountTransaction(){
-		$this->data = [];
 
-		$version = $this->data->Version;
+		$version = SerializeBase::serializeUInt8(3);
 		$type = SerializeBase::serializeUInt16(0x4155);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
@@ -178,9 +173,7 @@ class Serializer{
 	}
 
 	public function buildModifyAccountPropertyEntityTypeTransaction(){
-		$this->data = [];
-
-		$version = $this->data->Version;
+		$version = SerializeBase::serializeUInt8(1);
 		$type = SerializeBase::serializeUInt16(0x4350);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
@@ -218,10 +211,8 @@ class Serializer{
 	}
 
 	public function buildSecretLockTransaction(): Array{
-		$this->data = [];
-
-		$version = $this->data->Version;
-		$type = SerializeBase::serializeUInt16(0x4350);
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x4152);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
 		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
@@ -238,5 +229,30 @@ class Serializer{
 		$tx = array_merge($version,$type,$Transaction,$SecretLockTransactionBody);
 
 		return $SecretLockTransactionBody;
+	}
+
+	public function addProof(string $proof){
+		$this->data["Proof"] = unpack("C*",hex2bin($proof));
+		$this->data["ProofSize"] = SerializeBase::serializeUInt16(sizeof($proof));
+	}
+
+	public function buildSecretProofTransaction(): Array{
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x4252);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$SecretProofTransactionBody = [];
+		
+		$SecretProofTransactionBody = array_merge($this->data["HashAlgorithm"],
+												$this->data["Secret"],
+												$this->data["ProofSize"],
+												$this->data["Proof"]);
+
+		$tx = array_merge($version,$type,$Transaction,$SecretProofTransactionBody);
+
+		return $SecretProofTransactionBody;
 	}
 }

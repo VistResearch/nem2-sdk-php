@@ -2,9 +2,9 @@
 
 namespace NEM\Models\Transaction;
 
-use NEM\Models\Transaction\Account\Address;
-use NEM\Models\Transaction\Account\PublicAccount;
-use NEM\Models\Transaction\Blockchain\NetworkType;
+use NEM\Models\Account\Address;
+use NEM\Models\Account\PublicAccount;
+use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\Mosaic\Mosaic;
 use NEM\Models\UInt64;
 use NEM\Models\Transaction\Deadline;
@@ -143,6 +143,7 @@ class SecretLockTransaction extends Transaction {
     protected function serialize(): Array {
     	$s = new Serializer();
     	$s->addDeadline($this->deadline->toDTO());
+    	$s->addVersion($this->versionToDTO());
     	$s->addType($this->type);
     	$s->addFee($this->maxFee->toDTO());
     	$s->addMosaic($this->mosaic->toDTO());
