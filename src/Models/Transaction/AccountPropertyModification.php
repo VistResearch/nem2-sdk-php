@@ -69,13 +69,20 @@ class AccountPropertyModification{
     return new AccountPropertyModification($modificationType, $entityType, "Transaction Type");
     }
 
-    // /**
-    //  * @internal
-    //  */
-    // toDTO() {
-    //     return {
-    //         value: this.value,
-    //         modificationType: this.modificationType,
-    //     };
-    // }
+    /**
+     * @internal
+     */
+    toDTO() {
+
+        if ($this->value instanceof int){
+            $m = $this->value;
+        }
+        else{
+            $m = $this->value->toDTO();
+        }
+        return [
+            "value" => $m,
+            "modificationType" => $this->modificationType,
+        ];
+    }
 }

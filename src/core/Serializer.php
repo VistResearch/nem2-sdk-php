@@ -63,7 +63,7 @@ class Serializer{
 
 		// Tx = SizePrefixedEntity(uint32) + VerifiableEntity(binary_fixed(64)) + EntityBody(binary_fixed(32) + version + type)\\
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
 
 
 		$Mosaic = []
@@ -98,10 +98,11 @@ class Serializer{
 		$this->data = [];
 
 		$version = $this->data->Version;
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0X4154));
+		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x414C));
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+
 
 		$AccountLinkTransactionBody = array_merge($this->data->RemoteAccountKey,$this->data->AccountLinkAction);
 
@@ -110,6 +111,39 @@ class Serializer{
 		return $AccountLinkTransactionBody;
 
 	}
+
+	// Array of modification DTO
+	public function addModifications(Array $Modifications){
+		$this->data.setAttribute("Modifications",$Modifications);
+	}
+
+	public function addPropertyType(int $PropertyType){
+		$this->data.setAttribute("PropertyType",$PropertyType);
+	}
+
+	public function buildAccountPropertyModificationTransaction(){
+		$this->data = [];
+
+		$version = $this->data->Version;
+		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4150));
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+
+
+		$modificationsArray = [];
+		foreach ($this->data->Modifications as $key => $value) {
+			array_merge($modificationsArray, $value->modificationType);
+			array_merge($modificationsArray, $value->value);
+		}
+
+		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
+
+		$tx = array_merge($Transaction,$AccountPropertyModificationTransactionBody);
+		
+		return $AccountPropertyModificationTransactionBody;
+	}
+
 
 
 }
