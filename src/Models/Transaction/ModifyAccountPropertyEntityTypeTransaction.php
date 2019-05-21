@@ -99,8 +99,7 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
         $s->addFee($this->maxFee->toDTO());
         $s->addVersion($this->versionToDTO());
 
-        $s->addMinApprovalDelta($this->data->minApprovalDelta);
-        $s->addMinRemovalDelta($this->data->minRemovalDelta);
+        $s->addPropertyType($this->propertyType);
 
         $modifications = [];
         foreach ($this->data->modifications as $key => $value) {
@@ -109,13 +108,7 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 
         $s->addModifications($modifications);
 
-        return new AccountPropertiesEntityTypeTransactionLibrary.Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addPropertyType(this.propertyType)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
+        return $s->buildModifyAccountPropertyEntityTypeTransaction();
     }
 
 }

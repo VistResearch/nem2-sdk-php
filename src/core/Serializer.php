@@ -193,11 +193,11 @@ class Serializer{
 			array_merge($modificationsArray, $value->value);
 		}
 
-		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
+		$ModifyAccountPropertyEntityTypeTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
 
 		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
 
-		return $AccountPropertyModificationTransactionBody;
+		return $ModifyAccountPropertyEntityTypeTransactionBody;
 	}
 
 }
