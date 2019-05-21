@@ -1,5 +1,6 @@
 <?php
 
+namespace NEM\Models\Transaction;
 
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;

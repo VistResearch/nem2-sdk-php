@@ -3,6 +3,7 @@
 namespace NEM\Models\Mosiac;
 
 use NEM\Models\Id;
+use NEM\Core\Identifier;
 
 class MosaicId{
 
@@ -19,10 +20,10 @@ class MosaicId{
      * @param   owner   {Account}
      * @return  {MosaicId}
      */
-    // public static function createFromNonce(MosaicNonce $nonce, PublicAccount $owner): MosaicId {
-    //     $mosaicId = MosaicIdentifierGenerator(nonce.nonce, convert.hexToUint8(owner.publicKey));
-    //     return new MosaicId($mosaicId);
-    // }
+    public static function createFromNonce(MosaicNonce $nonce, PublicAccount $owner): MosaicId {
+        $mosaicId = Identifier::generateMosaicId($nonce->nonce, $owner->publicKey);
+        return new MosaicId($mosaicId);
+    }
 
 	public function equals($data):bool{
 		if ($data instanceof MosaicId) {

@@ -3,6 +3,7 @@
 namespace NEM\Models\Namespace;
 
 use NEM\Models\Id;
+use NEM\Core\Identifier;
 
 class NamespaceId {
 
@@ -27,8 +28,7 @@ class NamespaceId {
             $this->id = new Id($id);
         } else if (is_string($id)) {
             $this->fullName = $id;
-            throw new Exception("Not support yet\n");
-            // $this->id = new Id(NamespaceIdGenerator($id));
+            $this->id = new Id(Identifier::generateNamespaceId($id));
         }
     }
 
