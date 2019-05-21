@@ -306,8 +306,8 @@ class Serializer{
 	}
 
 	public function buildLockFundsTransaction(): Array{
-		$version = SerializeBase::serializeUInt8(2);
-		$type = SerializeBase::serializeUInt16(0x414E);
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x4148);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
 		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
@@ -324,8 +324,8 @@ class Serializer{
 	}
 
 	public function buildModifyAccountPropertyMosaicTransaction(){
-		$version = SerializeBase::serializeUInt8(2);
-		$type = SerializeBase::serializeUInt16(0x414E);
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x4152);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
 		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
@@ -338,5 +338,28 @@ class Serializer{
 		$tx = array_merge($version,$type,$Transaction,$ModifyAccountPropertyMosaicTransactionBody);
 
 		return $LockFundsTransactionBody;	
+	}
+	public function addActionType(int $action){
+		$this->data["ActionType"] = uSerializeBase::serializeUInt8($action);
+	}
+	public function addMosaicId(Array $Id){
+		$this->data["MosaicId"] = SerializeBase::serializeUInt64($Id);
+	}
+
+	public function buildMosaicAliasTransaction(){
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x4152);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$MosaicAliasTransactionBody = array_merge($this->data["ActionType"],
+												$this->data["NamespaceId"],
+												$this->data["MosaicId"]);
+
+		$tx = array_merge($version,$type,$Transaction,$MosaicAliasTransactionBody);
+
+		return $MosaicAliasTransactionBody;	
 	}
 }
