@@ -116,7 +116,7 @@ class ModifyMultisigAccountTransaction extends Transaction {
      * @internal
      * @returns {VerifiableTransaction}
      */
-    protected function buildTransaction(): Array {
+    protected function serialize(): Array {
         $s = new Serializer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());

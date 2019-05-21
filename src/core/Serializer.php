@@ -112,16 +112,12 @@ class Serializer{
 
 	}
 
-	// Array of modification DTO
-	public function addModifications(Array $Modifications){
-		$this->data["Modifications"] = $Modifications;
-	}
 
 	public function addPropertyType(int $PropertyType){
 		$this->data["PropertyType"] = $PropertyType;
 	}
 
-	public function buildAccountPropertyModificationTransaction(){
+	public function buildAccountPropertiesAddressTransaction(){
 		$this->data = [];
 
 		$version = $this->data->Version;
@@ -179,6 +175,29 @@ class Serializer{
 		$tx = array_merge($version,$type,$Transaction,$ModifyMultisigAccountTransactionBody);
 
 		return $AccountPropertyModificationTransactionBody;		
+	}
+
+	public function buildModifyAccountPropertyEntityTypeTransaction(){
+		$this->data = [];
+
+		$version = $this->data->Version;
+		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4350));
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+
+
+		$modificationsArray = [];
+		foreach ($this->data->Modifications as $key => $value) {
+			array_merge($modificationsArray, $value->modificationType);
+			array_merge($modificationsArray, $value->value);
+		}
+
+		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
+
+		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
+
+		return $AccountPropertyModificationTransactionBody;
 	}
 
 }

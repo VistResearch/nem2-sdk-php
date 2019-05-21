@@ -92,9 +92,17 @@ class ModifyAccountPropertyAddressTransaction extends Transaction{
     	$s = new Serializer();
     	$s->addDeadline($this->deadline->toDTO());
     	$s->addFee($this->maxFee->toDTO());
+        $s->addVersion($this->versionToDTO());
 
+        $modifications = [];
+        foreach ($this->modifications as $key => $value) {
+            array_merge($modifications,$value->toCatbuffer());
+        }
 
-        return $s->buildAccountLinkTransaction();
+        $s->addModifications($modifications);
+        $s->addPropertyType($this->propertyType);
+
+        return $s->buildAccountPropertiesAddressTransaction();
     }
 
 
