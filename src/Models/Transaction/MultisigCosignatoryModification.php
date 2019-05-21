@@ -4,6 +4,8 @@ namespace NEM\Models\Transaction;
 
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Transaction\MultisigCosignatoryModificationType;
+use NEM\Core\SerializeBase;
+use NEM\util\Base32;
 
 class MultisigCosignatoryModification {
 
@@ -36,10 +38,9 @@ class MultisigCosignatoryModification {
     /**
      * @internal
      */
-    public function toDTO() {
-        return [
-            "cosignatoryPublicKey": $this->cosignatoryPublicAccount->publicKey,
-            "type": $this->type,
-        ];
+    public function toCatbuffer() {
+        $key = unpack("C*",hex2bin($this->cosignatoryPublicAccount->publicKey));
+        $type = [$this->type & 0xff];
+        return array_merge($type,$key);
     }
 }

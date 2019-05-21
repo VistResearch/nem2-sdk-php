@@ -18,36 +18,36 @@ class Serializer{
 
 	// Need Uint64 DTO Array as input
 	public function addDeadline(Array $Deadline){
-		$this->data.setAttribute("Deadline",SerializeBase::serializeUInt8($Deadline));
+		$this->data["Deadline"] = SerializeBase::serializeUInt8($Deadline);
 	}
 
 	// Need Uint64 DTO Array as input
 	public function addFee(Array $Fee){
-		$this->data.setAttribute("Fee",SerializeBase::serializeUInt64($Fee));
+		$this->data["Fee"] = SerializeBase::serializeUInt64($Fee);
 	}
 
 	// address as plain, ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3
 	public function addRecipient(string $Address){
-		$this->data.setAttribute("Recipient",Base32::decode($Address,"array"));
+		$this->data["Recipient"] = Base32::decode($Address,"array");
 	}
 
 	// int of version as input
 	public function addVersion(int $version){
-		$this->data.setAttribute("Version",[$version]);
+		$this->data["Version"] = [$version];
 	}
 
 	//  Array created from msg DTO
 	public function addMessage(Array $messageDTO){
 		$msg = SerializeBase::serializeString($messageDTO["payload"]);
 		array_push($msg, $messageDTO["type"]);
-		$this->data.setAttribute("Message",$msg);
-		$this->data.setAttribute("MessageSize",	[sizeof($msg) >> 8, sizeof($msg) % 256]);
+		$this->data["Message"] = $msg;
+		$this->data["MessageSize"] = [sizeof($msg) >> 8, sizeof($msg) % 256];
 	}
 
 	//  Array of Mosaic DTO
 	public function addMosaics(Array $mosaicArray){
-		$this->data.setAttribute("Mosaic",$mosaicArray);
-		$this->data.setAttribute("MosaicNum",sizeof($mosaicArra));
+		$this->data["Mosaic"] = $mosaicArray;
+		$this->data["MosaicNum"] = sizeof($mosaicArra);
 	}
 
 	public function buildTransferTransaction(){
@@ -85,13 +85,13 @@ class Serializer{
 
 	// input are public key string
 	public function addRemoteAccountKey(string $key){
-		$this->data.setAttribute("RemoteAccountKey",unpack("C*",hex2bin($key)));
+		$this->data["RemoteAccountKey"] = unpack("C*",hex2bin($key));
 
 	}
 
 	// input will only be 0 or 1
 	public function addAccountLinkAction(int $action){
-		$this->data.setAttribute("AccountLinkAction",SerializeBase::parseInt($action));
+		$this->data["AccountLinkAction"] = SerializeBase::parseInt($action);
 	}
 
 	public function buildAccountLinkTransaction(){
@@ -114,11 +114,11 @@ class Serializer{
 
 	// Array of modification DTO
 	public function addModifications(Array $Modifications){
-		$this->data.setAttribute("Modifications",$Modifications);
+		$this->data["Modifications"] = $Modifications;
 	}
 
 	public function addPropertyType(int $PropertyType){
-		$this->data.setAttribute("PropertyType",$PropertyType);
+		$this->data["PropertyType"] = $PropertyType;
 	}
 
 	public function buildAccountPropertyModificationTransaction(){
@@ -139,11 +139,46 @@ class Serializer{
 
 		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
 
-		$tx = array_merge($Transaction,$AccountPropertyModificationTransactionBody);
-		
+		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
+
 		return $AccountPropertyModificationTransactionBody;
 	}
 
+	public function addMinApprovalDelta(int $l){
+		$data = [$l & 0xff];
+		$this->data["MinApprovalDelta"]  = $data;
+	}
 
+	public function addMinRemovalDelta(int $l){
+		$data = [$l & 0xff];
+		$this->data["MinRemovalDelta"] = $data;		
+	}
+
+	public function addModifications(Array $m){
+		$length = [sizeof($m) & 0xff];
+		$data = [];
+		foreach ($m as $key => $value) {
+			array_merge($data,$value);			
+		}
+		$this->data["Modifications"] = $data;
+		$this->data["ModificationsCount"] = $length;
+	}
+
+	public function buildModifyMultisigAccountTransaction(){
+		$this->data = [];
+
+		$version = $this->data->Version;
+		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4155));
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+
+
+		$ModifyMultisigAccountTransactionBody = array_merge($this->data->MinRemovalDelta,$this->data->MinApprovalDelta,$this->data->ModificationsCount,$this->data->Modifications);
+
+		$tx = array_merge($version,$type,$Transaction,$ModifyMultisigAccountTransactionBody);
+
+		return $AccountPropertyModificationTransactionBody;		
+	}
 
 }

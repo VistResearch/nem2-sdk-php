@@ -7,6 +7,10 @@ namespace NEM\Core;
 
 class SerializeBase{
 
+    public static function serializeUint8(int $l)
+    {
+        return $l;
+    }
 
  	public static function serializeLong(int $long = null)
     {
