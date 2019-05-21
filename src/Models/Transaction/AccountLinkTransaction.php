@@ -9,6 +9,7 @@ use NEM\Models\Transaction\LinkAction;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
+
 use NEM\Core\SerializeBase;
 use NEM\Core\Serializer;
 

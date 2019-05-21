@@ -17,25 +17,26 @@ $nonce = MosaicNonce::createFromHex("00000000");
 $pbkey = "7D08373CFFE4154E129E04F0827E5F3D6907587E348757B0F87D2F839BF88246";
 $a = unpack("C*",hex2bin($pbkey) );
 
-$data = array_merge($nonce->nonce ,  $a);
-// var_dump(pack("C*" , ...$data));
-// var_dump(pack("C*" , ...[49,50,51]));
-// print( pack("C*" , [49]) 	."\n");
-$hash = hash('sha3-256', pack("C*" , ...$data));
-print($hash."\n");
-// $hash = hash_init ('sha3-256');
-// hash_update($hash,pack("C*" , ...$nonce->nonce));
-// hash_update($hash,pack("C*" , ...$a));
-// print(hash_final($hash)."\n");
-// print(substr($hash,0,16)."\n");
-$a = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
-// var_dump($a);
-$f = hexdec($a[1]);
-$aa = [($f >> 24) & 0xff,
-	($f >> 16) & 0xff,
-	($f >> 8) & 0xff,
-	($f >> 0) & 0xff];
-var_dump(unpack('C*',"QAQ"));
+var_dump($a);
+// $data = array_merge($nonce->nonce ,  $a);
+// // var_dump(pack("C*" , ...$data));
+// // var_dump(pack("C*" , ...[49,50,51]));
+// // print( pack("C*" , [49]) 	."\n");
+// $hash = hash('sha3-256', pack("C*" , ...$data));
+// print($hash."\n");
+// // $hash = hash_init ('sha3-256');
+// // hash_update($hash,pack("C*" , ...$nonce->nonce));
+// // hash_update($hash,pack("C*" , ...$a));
+// // print(hash_final($hash)."\n");
+// // print(substr($hash,0,16)."\n");
+// $a = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
+// // var_dump($a);
+// $f = hexdec($a[1]);
+// $aa = [($f >> 24) & 0xff,
+// 	($f >> 16) & 0xff,
+// 	($f >> 8) & 0xff,
+// 	($f >> 0) & 0xff];
+// var_dump(unpack('C*',"QAQ"));
 // print(hexdec(substr($hash,0,16)) ."\n");
 // $result = [hexdec($a),hexdec(substr($hash,16,16))];
 

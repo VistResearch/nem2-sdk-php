@@ -13,6 +13,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 use NEM\Core\Identifier;
+use NEM\Core\Serializer;
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.

@@ -281,9 +281,9 @@ class Serializer{
 		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
-		$SecretProofTransactionBody = [];
+		$RegisterNamespaceTransactionBody = [];
 		
-		if (array_key_exists("ParentId",$this->data){
+		if (array_key_exists("ParentId",$this->data)){
 			$op = $this->data["ParentId"];
 		}
 		else{
@@ -299,5 +299,27 @@ class Serializer{
 		$tx = array_merge($version,$type,$Transaction,$RegisterNamespaceTransactionBody);
 
 		return $RegisterNamespaceTransactionBody;		
+	}
+
+	public function addHash(string $hex){
+		$this->data["Hash"] = unpack("C*",hex2bin($hex));
+	}
+
+	public function buildLockFundsTransaction(): Array{
+		$version = SerializeBase::serializeUInt8(2);
+		$type = SerializeBase::serializeUInt16(0x414E);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$LockFundsTransactionBody = array_merge($this->data["Mosaic"],
+												$this->data["Duration"],
+												$this->data["Hash"]);
+
+		$tx = array_merge($version,$type,$Transaction,$LockFundsTransactionBody);
+
+		return $LockFundsTransactionBody;		
+
 	}
 }
