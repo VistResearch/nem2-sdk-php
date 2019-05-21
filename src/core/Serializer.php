@@ -33,7 +33,7 @@ class Serializer{
 
 	// int of version as input
 	public function addVersion(int $version){
-		$this->data["Version"] = [$version];
+		$this->data["Version"] = SerializeBase::serializeUInt8($version);
 	}
 
 	//  Array created from msg DTO
@@ -58,12 +58,12 @@ class Serializer{
 		}
 		$output = [];
 
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0X4154));
+		$type = SerializeBase::serializeUInt16(0X4154);
 		$version = $this->data->Version;
 
 		// Tx = SizePrefixedEntity(uint32) + VerifiableEntity(binary_fixed(64)) + EntityBody(binary_fixed(32) + version + type)\\
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
 		$Mosaic = []
@@ -91,17 +91,17 @@ class Serializer{
 
 	// input will only be 0 or 1
 	public function addAccountLinkAction(int $action){
-		$this->data["AccountLinkAction"] = SerializeBase::parseInt($action);
+		$this->data["AccountLinkAction"] = SerializeBase::serializeUInt8($action);
 	}
 
 	public function buildAccountLinkTransaction(){
 		$this->data = [];
 
 		$version = $this->data->Version;
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x414C));
+		$type = SerializeBase::serializeUInt16(0x414C);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
 		$AccountLinkTransactionBody = array_merge($this->data->RemoteAccountKey,$this->data->AccountLinkAction);
@@ -121,10 +121,10 @@ class Serializer{
 		$this->data = [];
 
 		$version = $this->data->Version;
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4150));
+		$type = SerializeBase::serializeUInt16(0x4150);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
 		$modificationsArray = [];
@@ -133,7 +133,7 @@ class Serializer{
 			array_merge($modificationsArray, $value->value);
 		}
 
-		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::parseInt(sizeof($this->data->Modifications)),$modificationsArray);
+		$AccountPropertyModificationTransactionBody = array_merge($this->data->PropertyType,SerializeBase::serializeUInt8(sizeof($this->data->Modifications)),$modificationsArray);
 
 		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
 
@@ -164,10 +164,10 @@ class Serializer{
 		$this->data = [];
 
 		$version = $this->data->Version;
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4155));
+		$type = SerializeBase::serializeUInt16(0x4155);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
 		$ModifyMultisigAccountTransactionBody = array_merge($this->data->MinRemovalDelta,$this->data->MinApprovalDelta,$this->data->ModificationsCount,$this->data->Modifications);
@@ -181,10 +181,10 @@ class Serializer{
 		$this->data = [];
 
 		$version = $this->data->Version;
-		$type = array_merge([0,0,0,0],SerializeBase::parseInt(0x4350));
+		$type = SerializeBase::serializeUInt16(0x4350);
 
 		$EntityBody = array_merge([0,0,0,0],$version,$type);
-		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->ddata->Deadline);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
 
 
 		$modificationsArray = [];
@@ -200,4 +200,43 @@ class Serializer{
 		return $ModifyAccountPropertyEntityTypeTransactionBody;
 	}
 
+	public function addMosaic(Array $value){
+		$this->data["Mosaic"] = [SerializeBase::serializeUInt64($value->id),
+					SerializeBase::serializeUInt64($value->amonut)];
+	}
+
+	public function addHashAlgorithm(int $al){
+		$this->data["HashAlgorithm"] = [$al & 0xff];
+	}
+
+	public function addSecret(string $secret){
+		$this->data["Secret"] = unpack("C*",hex2bin($secret));
+	}
+
+	public function addDuration(Array $Duration){
+		$this->data["Duration"] = SerializeBase::serializeUInt64($Duration);
+	}
+
+	public function buildSecretLockTransaction(): Array{
+		$this->data = [];
+
+		$version = $this->data->Version;
+		$type = SerializeBase::serializeUInt16(0x4350);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$SecretLockTransactionBody = [];
+		
+		$SecretLockTransactionBody = array_merge($this->data["Mosaic"],
+												$this->data["Duration"],
+												$this->data["HashAlgorithm"],
+												$this->data["Secret"],
+												$this->data["Recipient"]);
+
+		$tx = array_merge($version,$type,$Transaction,$SecretLockTransactionBody);
+
+		return $SecretLockTransactionBody;
+	}
 }

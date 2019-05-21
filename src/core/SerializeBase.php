@@ -7,31 +7,20 @@ namespace NEM\Core;
 
 class SerializeBase{
 
-    public static function serializeUint8(int $l)
+    public static function serializeUInt8(int $l)
     {
-        return $l;
+        return [($l >> 0) & 0xff];
     }
-
- 	public static function serializeLong(int $long = null)
+    public static function serializeUInt16(int $l)
     {
-        if (null === $long) {
-            // long on 8 bytes always
-            $uint8 = array_merge($this->serializeInt(null), $this->serializeInt(0));
-        }
-        else {
-            // prepend size on 4 bytes
-            $uint64L = $this->serializeInt($long);
-            $uint64H = $this->serializeInt($long >> 32);
-            $uint8 = array_merge($uint64L, $uint64H);
-            if (($len = count($uint8)) === 8) 
-                // job done
-                return $uint8;
-            // right padding to 8 bytes
-            for ($i = 0, $done = 8 - $len; $i < $done; $i++) {
-                array_push($uint8, 0);
-            }
-        }
-        return $uint8;
+        return [($l >> 8) & 0xff, ($l >> 0) & 0xff];
+    }
+    public static function serializeUInt32(int $l)
+    {
+        return [($l >> 24) & 0xff,
+                ($l >> 16) & 0xff,
+                ($l >> 8 ) & 0xff,
+                ($l >> 0 ) & 0xff];
     }
 
     public static function serializeUInt64(Array $UInt64)
@@ -51,39 +40,6 @@ class SerializeBase{
         return $uint64;
     }
 
-    public static function serializeInt(int $number = null)
-    {
-
-        if (null === $number) {
-            return $this->serializeInt(self::NULL_SENTINEL);
-        }
-        else {
-            $uint8 = [
-                $number         & 0xff,
-                ($number >> 8)  & 0xff,
-                ($number >> 16) & 0xff,
-                ($number >> 24) & 0xff
-            ];
-        }
-        return $uint8;
-    }
-
-    public static function parseInt(int $number = null)
-    {
-
-        if (null === $number) {
-            return $this->serializeInt(self::NULL_SENTINEL);
-        }
-        else {
-            $uint8 = [
-                ($number >> 24)  & 0xff,
-                ($number >> 16)  & 0xff,
-                ($number >> 8 ) & 0xff,
-                ($number >> 0 ) & 0xff
-            ];
-        }
-        return $uint8;
-    }
 
     public function serializeString(string $str = null)
     {
