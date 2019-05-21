@@ -5,6 +5,7 @@ namespace NEM\Models\Transaction;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\Mosaic\MosaicId;
+use NEM\Models\Mosaic\MosaicSupplyType;
 use NEM\Models\Namespace\AliasActionType;
 use NEM\Models\Namespace\NamespaceId;
 use NEM\Models\UInt64;
@@ -16,30 +17,30 @@ use NEM\Models\Transaction\TransactionVersion;
 
 use NEM\Core\Serializer;
 
-class MosaicAliasTransaction extends Transaction {
+class MosaicSupplyChangeTransaction extends Transaction {
 
 	public $namespaceId;
 	public $mosaicId;
 	public $actionType;
 
     /**
-     * Create a mosaic alias transaction object
+     * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param actionType - The alias action type.
-     * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
+     * @param direction - The supply type.
+     * @param delta - The supply change in units for the mosaic.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {MosaicAliasTransaction}
+     * @returns {MosaicSupplyChangeTransaction}
      */
     public static function create(Deadline $deadline,
-                         int $actionType,
-                         NamespaceId $namespaceId,
                          MosaicId $mosaicId,
+                         int $direction, //
+                         UInt64 $delta,
                          int $networkType,
-                         UInt64 $maxFee = new UInt64([0, 0])): MosaicAliasTransaction {
-        return new MosaicAliasTransaction($networkType,
-            TransactionVersion::MOSAIC_ALIAS,
+                         UInt64 $maxFee = new UInt64([0, 0])): MosaicSupplyChangeTransaction {
+        return new MosaicSupplyChangeTransaction($networkType,
+            TransactionVersion::MOSAIC_SUPPLY_CHANGE,
             $deadline,
             $maxFee,
             $actionType,
@@ -63,29 +64,27 @@ class MosaicAliasTransaction extends Transaction {
     function __construct(int $networkType,
                 int $version,
                 Deadline $deadline,
-                UInt64 $maxFee,
-                /**
-                 * The alias action type.
-                 */
-                int $actionType,
-                /**
-                 * The namespace id that will be an alias.
-                 */
-                NamespaceId $namespaceId,
+                UInt64 $maxFee
                 /**
                  * The mosaic id.
                  */
                 MosaicId $mosaicId,
+                /**
+                 * The supply type.
+                 */
+                int $direction,
+                /**
+                 * The supply change in units for the mosaic.
+                 */
+                UInt64 $delta,
                 string $signature = "",
                 PublicAccount $signer = null, 
                 TransactionInfo $ransactionInfo= null) {
-    	$this->mosaicId = $mosaicId;
-    	$this->namespaceId = $namespaceId;
-    	$this->actionType = $actionType;
-
-        parent::__construct(TransactionType::MOSAIC_ALIAS, $networkType, $version, $deadline, $maxFee, $signature, $signer, $transactionInfo);
+        $this->namespaceId = $namespaceId;
+        $this->mosaicId = $mosaicId;
+        $this->actionType = $actionType;
+        parent::__construct(TransactionType::MOSAIC_SUPPLY_CHANGE, $networkType, $version, $deadline, $maxFee, $signature, $signer, $transactionInfo);
     }
-
     /**
      * @override Transaction.size()
      * @description get the byte size of a MosaicAliasTransaction
@@ -95,30 +94,31 @@ class MosaicAliasTransaction extends Transaction {
     public function size(): int {
         $byteSize = parent::size();
 
-        // set static byte size fields
-        $byteType = 1;
-        $byteNamespaceId = 8;
-        $byteMosaicId = 8;
 
-        return $byteSize + $byteType + $byteNamespaceId + $byteMosaicId;
+        // set static byte size fields
+        $byteMosaicId = 8;
+        $byteDirection = 1;
+        $byteDelta = 8;
+
+        return $byteSize + $byteMosaicId + $byteDirection + $byteDelta;
     }
 
     /**
      * @internal
      * @returns {VerifiableTransaction}
      */
-    protected function serialize(): Array {
-		$s = new Serializer();
+    protected serialize(): Array {
+        $s = new Serializer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
         $s->addVersion($this->versionToDTO());
 
-        $s->addActionType($this->actionType);
-        $s->addNamespaceId($this->namespaceId->id->toDTO());
         $s->addMosaicId($this->mosaicId->id->toDTO());
+        $s->addDirection($this->direction);
+        $s->addDelta($this->delta->toDTO());
 
-        return $s->buildMosaicAliasTransaction();
-
+        return $s->buildMosaicSupplyChangeTransaction();
+       
     }
 
 }
