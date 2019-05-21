@@ -210,7 +210,7 @@ class Serializer{
 	}
 
 	public function addSecret(string $secret){
-		$this->data["Secret"] = unpack("C*",hex2bin($secret));
+		$this->data["Secret"] = array_reverse(unpack("C*",hex2bin($secret)));
 	}
 
 	public function addDuration(Array $Duration){
