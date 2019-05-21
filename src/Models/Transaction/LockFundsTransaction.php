@@ -4,7 +4,7 @@ namespace NEM\Models\Transaction;
 
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;
-use NEM\Models\Mosaic\Mosai';
+use NEM\Models\Mosaic\Mosaic;
 use NEM\Models\UInt64;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\Transaction\SignedTransaction;

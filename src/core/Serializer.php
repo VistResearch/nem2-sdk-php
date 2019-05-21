@@ -322,4 +322,21 @@ class Serializer{
 		return $LockFundsTransactionBody;		
 
 	}
+
+	public function buildModifyAccountPropertyMosaicTransaction(){
+		$version = SerializeBase::serializeUInt8(2);
+		$type = SerializeBase::serializeUInt16(0x414E);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$ModifyAccountPropertyMosaicTransactionBody = array_merge($this->data["PropertyType"],
+												$this->data["ModificationsCount"],
+												$this->data["Modifications"]);
+
+		$tx = array_merge($version,$type,$Transaction,$ModifyAccountPropertyMosaicTransactionBody);
+
+		return $LockFundsTransactionBody;	
+	}
 }
