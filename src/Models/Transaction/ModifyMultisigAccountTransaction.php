@@ -7,7 +7,7 @@ use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
-use NEM\Models\Transaction\MultisigCosignatoryModification';
+use NEM\Models\Transaction\MultisigCosignatoryModification;
 use NEM\Models\Transaction\Transaction;
 use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
@@ -123,14 +123,18 @@ class ModifyMultisigAccountTransaction extends Transaction {
         $s->addVersion($this->versionToDTO());
 
         $s->addMinApprovalDelta($this->data->minApprovalDelta);
-        return new ModifyMultisigAccountTransactionLibrary.Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMinApprovalDelta(this.minApprovalDelta)
-            .addMinRemovalDelta(this.minRemovalDelta)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
+        $s->addMinRemovalDelta($this->data->minRemovalDelta);
+
+        $modifications = [];
+        foreach ($this->data->modifications as $key => $value) {
+            array_merge($modifications,$value->toCatbuffer());
+        }
+
+        $s->addModifications($modifications);
+
+        return $s->buildModifyMultisigAccountTransaction();
     }
+
+    
 
 }
