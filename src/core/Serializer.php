@@ -207,7 +207,10 @@ class Serializer{
 	}
 
 	public function addDuration(Array $Duration){
-		$this->data["Duration"] = SerializeBase::serializeUInt64($Duration);
+		if (sizeof($Duration) == 2){
+			$this->data["Duration"] = SerializeBase::serializeUInt64($Duration);
+		}
+		
 	}
 
 	public function buildSecretLockTransaction(): Array{
@@ -370,7 +373,7 @@ class Serializer{
 		$this->data["Delta"] = SerializeBase::serializeUInt64($delta);
 	}
 
-	public function buildMosaicSupplyChangeTransaction() Array{
+	public function buildMosaicSupplyChangeTransaction(): Array{
 		$version = SerializeBase::serializeUInt8(1);
 		$type = SerializeBase::serializeUInt16(0x4152);
 
@@ -385,5 +388,58 @@ class Serializer{
 		$tx = array_merge($version,$type,$Transaction,$MosaicSupplyChangeTransactionBody);
 
 		return $MosaicSupplyChangeTransactionBody;	
+	}
+	public function addAddress(string $Address){
+		$this->data["Address"] = Base32::decode($Address,"array");
+	}
+
+	public function buildAddressAliasTransaction(): Array{
+		$version = SerializeBase::serializeUInt8(1);
+		$type = SerializeBase::serializeUInt16(0x424E);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+
+		$AddressAliasTransactionBody = array_merge($this->data["AliasAction"],
+												$this->data["NamespaceId"],
+												$this->data["Address"]);
+
+		$tx = array_merge($version,$type,$Transaction,$AddressAliasTransactionBody);
+
+		return $AddressAliasTransactionBody;			
+	}
+
+
+	public function addDivisibility(int $div){
+		$this->data["Divisibility"] = SerializeBase::serializeUInt8($div);
+	}
+
+	public function addNonce(Array $Nonce){
+		$this->data["Nonce"] = $Nonce;
+	}
+
+	public function addMosaicProperties(int $flag){
+		$this->data["MosaicFlag"] = SerializeBase::serializeUInt8($flag);
+	}
+
+	public function buildMosaicDefinitionTransaction(): Array{
+		$version = SerializeBase::serializeUInt8(2);
+		$type = SerializeBase::serializeUInt16(0x414D);
+
+		$EntityBody = array_merge([0,0,0,0],$version,$type);
+		$Transaction = array_merge([0,0,0,0],[0,0,0,0,0,0,0,0],$EntityBody,$this->data->Fee,$this->data->Deadline);
+
+		$durationProvided = array_key_exists("Duration", $this->data)	;
+
+		$MosaicDefinitionTransactionBody = array_merge($this->data["Nonce"],
+												$this->data["MosaicId"],
+												$durationProvided ? [1] : [0],
+												$this->data["MosaicFlag"]);
+
+		$tx = array_merge($version,$type,$Transaction,$MosaicDefinitionTransactionBody);
+
+		return $MosaicDefinitionTransactionBody;			
+
 	}
 }

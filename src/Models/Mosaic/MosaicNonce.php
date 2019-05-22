@@ -49,4 +49,8 @@ class MosaicNonce {
         $this->nonce = $nonce;
     }
 
+    public function toDTO(){
+        return $this->nonce;
+    }
+
 }

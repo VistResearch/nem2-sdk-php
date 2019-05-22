@@ -26,6 +26,10 @@ class MosaicProperties {
      */
     public $levyMutable; //bool
 
+    public $duration;
+    public $divisibility;
+    public $flags;
+
     /**
      * @param flags
      * @param divisibility
@@ -53,6 +57,10 @@ class MosaicProperties {
         $this->supplyMutable = ($flagsLow % 2 === 1);
         $this->transferable = ( (int)($flagsLow >> 1) % 2 === 1);
         $this->levyMutable = ( (int)($flagsLow >> 2) % 2 === 1);
+
+        $this->duration = $duration;
+        $this->divisibility = $divisibility;
+        $this->flags = $flags;
     }
 
     /**
