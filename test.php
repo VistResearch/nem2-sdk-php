@@ -13,10 +13,10 @@ use NEM\Models\Mosaic\MosaicNonce;
 
 // $a = $a % 256;
 // var_dump(unpack("C*",hex2bin("b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf")));
-$nonce = MosaicNonce::createFromHex("00000000");
+// $nonce = MosaicNonce::createFromHex("00000000");
 $pbkey = "7D08373CFFE4154E129E04F0827E5F3D6907587E348757B0F87D2F839BF88246";
-$a = unpack("C*",hex2bin($pbkey) );
-
+$a = unpack("h*",$pbkey);
+$a = unpack("C*",hex2bin($pbkey));
 var_dump($a);
 // $data = array_merge($nonce->nonce ,  $a);
 // // var_dump(pack("C*" , ...$data));

@@ -10,15 +10,16 @@ use NEM\Models\Transaction\CosignatureSignedTransaction';
 /**
  * Cosignature transaction is used to sign an aggregate transactions with missing cosignatures.
  */
-export class CosignatureTransaction {
+class CosignatureTransaction {
     /**
      * @param transactionToCosign
      */
-    constructor(/**
+    public $transactionToCosign;
+    function __construct(/**
                  * Transaction to cosign.
                  */
-                public readonly transactionToCosign: AggregateTransaction) {
-
+                 AggregateTransaction $transactionToCosign) {
+    	$this->transactionToCosign = $transactionToCosign;
     }
 
     /**
@@ -26,11 +27,11 @@ export class CosignatureTransaction {
      * @param transactionToCosign - Transaction to cosign.
      * @returns {CosignatureTransaction}
      */
-    public static create(transactionToCosign: AggregateTransaction) {
-        if (transactionToCosign.isUnannounced()) {
+    public static function create(AggregateTransaction $transactionToCosign) {
+        if ($transactionToCosign->isUnannounced()) {
             throw new Error('transaction to cosign should be announced first');
         }
-        return new CosignatureTransaction(transactionToCosign);
+        return new CosignatureTransaction($transactionToCosign);
     }
 
     /**
@@ -39,11 +40,11 @@ export class CosignatureTransaction {
      * @param account
      * @returns {CosignatureSignedTransaction}
      */
-    public signWith(account: Account): CosignatureSignedTransaction {
-        const aggregateSignatureTransaction = new CosignaturetransactionLibrary(this.transactionToCosign.transactionInfo!.hash);
-        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account);
-        return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
-            signedTransactionRaw.signature,
-            signedTransactionRaw.signer);
-    }
+    // public function signWith(Account $account): CosignatureSignedTransaction {
+    //     $aggregateSignatureTransaction = new CosignaturetransactionLibrary($this->transactionToCosign->transactionInfo->hash);
+    //     $signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account);
+    //     return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
+    //         signedTransactionRaw.signature,
+    //         signedTransactionRaw.signer);
+    // }
 }

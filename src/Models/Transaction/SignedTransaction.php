@@ -58,13 +58,13 @@ class SignedTransaction {
     /**
      * Create DTO object
      */
-    // toDTO() {
-    //     return {
-    //         payload: this.payload,
-    //         hash: this.hash,
-    //         signer: this.signer,
-    //         type: this.type,
-    //         networkType: this.networkType,
-    //     };
-    // }
+    public function toDTO() {
+        return {
+            "payload": $this->payload,
+            "hash": $this->hash,
+            "signer": $this->signer,
+            "type": $this->type,
+            "networkType": $this->networkType,
+        };
+    }
 }

@@ -69,12 +69,14 @@ abstract class Transaction{
      * @returns {SignedTransaction}
      */
     public function signWith(Account $account): SignedTransaction {
-    	// TODO
-        $bytes = $this.buildTransaction();
-        $signedTransactionRaw = $account->sign($bytes);
+        $bytes = $this->serialize();
+        $payload = $account->sign(pack("C*",...array_slice($bytes,0,100)));
+        $hashBuffer = array_merge(array_slice($bytes,4,36),$payload,array_slice($bytes,100));
+        $hash = hash("sha3-256",pack("C*",...$hashBuffer));
+
         return new SignedTransaction(
-            $signedTransactionRaw->payload,
-            $signedTransactionRaw->hash,
+            $payload,
+            $hash,
             $account->publicKey,
             $this->type,
             $this->networkType);
@@ -84,14 +86,26 @@ abstract class Transaction{
      * @internal
      * should return a byte array
      */
-    protected abstract function buildTransaction();
+    protected abstract function serialize();
 
     /**
      * @internal
      * @returns {Array<number>}
      */
     public function aggregateTransaction(): number[] {
-        return $this->buildTransaction()->toAggregateTransaction($this->signer->publicKey);
+        $signer = unpack("C*",hex2bin($this->signer->publicKey));
+        $resultBytes = $this->serialize();
+        $resultBytes = aray_slice($resultBytes,0, 4 + 64 + 32);
+        $resultBytes = array_merge($signer,$resultBytes);
+        $resultBytes = aray_slice($resultBytes,32 + 2 + 2, 16);
+        $tmpArray = [
+            (sizeof($resultBytes) + 4 & 0x000000ff),
+            (sizeof($resultBytes) + 4 & 0x0000ff00) >> 8,
+            (sizeof($resultBytes) + 4 & 0x00ff0000) >> 16,
+            (sizeof($resultBytes) + 4 & 0xff000000) >> 24
+        ]
+
+        return array_merge($tmpArray,$resultBytes)
     }
 
     /**
@@ -99,53 +113,53 @@ abstract class Transaction{
      * @param signer - Transaction signer.
      * @returns InnerTransaction
      */
-    public function toAggregate(PublicAccount $signer): InnerTransaction {
-        if ($this->type === TransactionType::AGGREGATE_BONDED || $this->type === TransactionType::AGGREGATE_COMPLETE) {
-            throw new Error('Inner transaction cannot be an aggregated transaction.');
-        }
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
-    }
+    // public function toAggregate(PublicAccount $signer): InnerTransaction {
+    //     if ($this->type === TransactionType::AGGREGATE_BONDED || $this->type === TransactionType::AGGREGATE_COMPLETE) {
+    //         throw new Error('Inner transaction cannot be an aggregated transaction.');
+    //     }
+    //     return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
+    // }
 
     /**
      * Transaction pending to be included in a block
      * @returns {boolean}
      */
-    public isUnconfirmed(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0
-            && this.transactionInfo.hash === this.transactionInfo.merkleComponentHash;
+    public function isUnconfirmed(): boolean {
+        return $this->transactionInfo != null && $this->transactionInfo->height->compact() === 0
+            && $this->transactionInfo->hash === $this->transactionInfo->merkleComponentHash;
     }
 
     /**
      * Transaction included in a block
      * @returns {boolean}
      */
-    public isConfirmed(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() > 0;
+    public function isConfirmed(): boolean {
+        return $this->transactionInfo != null && $this->transactionInfo->height->compact() > 0;
     }
 
     /**
      * Returns if a transaction has missing signatures.
      * @returns {boolean}
      */
-    public hasMissingSignatures(): boolean {
-        return this.transactionInfo != null && this.transactionInfo.height.compact() === 0 &&
-            this.transactionInfo.hash !== this.transactionInfo.merkleComponentHash;
+    public function hasMissingSignatures(): boolean {
+        return $this->transactionInfo != null && $this.transactionInfo->height->compact() === 0 &&
+            $this->transactionInfo->hash !== $this.transactionInfo->merkleComponentHash;
     }
 
     /**
      * Transaction is not known by the network
      * @return {boolean}
      */
-    public isUnannounced(): boolean {
-        return this.transactionInfo == null;
+    public function isUnannounced(): boolean {
+        return $this->transactionInfo == null;
     }
 
     /**
      * @internal
      */
-    public versionToDTO(): number {
-        const versionDTO = this.networkType.toString(16) + '0' + this.version.toString(16);
-        return parseInt(versionDTO, 16);
+    public function versionToDTO(): number {
+        $versionDTO = dechex ($this->networkType) . '0' + dechex ($this->version);
+        return hexdec($versionDTO);
     }
 
     /**
@@ -154,8 +168,9 @@ abstract class Transaction{
      * @returns {Transaction}
      * @memberof Transaction
      */
-    public reapplyGiven(deadline: Deadline = Deadline.create()): Transaction {
-        if (this.isUnannounced()) {
+    // TODO
+    public function reapplyGiven(Deadline $deadline = Deadline::create()): Transaction {
+        if ($this->isUnannounced()) {
             return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
         }
         throw new Error('an Announced transaction can\'t be modified');
@@ -166,16 +181,16 @@ abstract class Transaction{
      * @returns {number}
      * @memberof Transaction
      */
-    public get size(): number {
-        const byteSize = 4 // size
-                        + 64 // signature
-                        + 32 // signer
-                        + 2 // version
-                        + 2 // type
-                        + 8 // maxFee
-                        + 8; // deadline
+    public function size(): int {
+        $byteSize = 4 // size
+                    + 64 // signature
+                    + 32 // signer
+                    + 2 // version
+                    + 2 // type
+                    + 8 // maxFee
+                    + 8; // deadline
 
-        return byteSize;
+        return $byteSize;
     }
 
     /**
@@ -183,9 +198,8 @@ abstract class Transaction{
      * @returns {string}
      * @memberof Transaction
      */
-    public serialize() {
-        const transaction = this.buildTransaction();
-        return transaction.serializeUnsignedTransaction();
+    public function serializeTransaction() {
+        return $this->serialize();
     }
 
     /**
@@ -193,21 +207,22 @@ abstract class Transaction{
      * @returns {Object}
      * @memberof Transaction
      */
-    public toJSON() {
-        const commonTransactionObject = {
-            type: this.type,
-            networkType: this.networkType,
-            version: this.versionToDTO(),
-            maxFee: this.maxFee.toDTO(),
-            deadline: this.deadline.toDTO(),
-            signature: this.signature ? this.signature : '',
-        };
+    public function toJSON() {
+        $commonTransactionObject = [
+            "type" => $this->type,
+            "networkType" => $this->networkType,
+            "version" => $this->versionToDTO(),
+            "maxFee" => $this->maxFe->toDTO(),
+            "deadline" => $this->deadlin->toDTO(),
+            "signature" => $this->signature ? $thi->signature : '',
+        ];
 
-        if (this.signer) {
-            Object.assign(commonTransactionObject, {signer: this.signer.publicKey});
+        if ($this->signer) {
+            array_merge($commonTransactionObject, [$signer: $this->signer->publicKey]);
         }
 
-        const childClassObject = SerializeTransactionToJSON(this);
-        return {transaction: Object.assign(commonTransactionObject, childClassObject)};
+        // TODO
+        $childClassObject = SerializeTransactionToJSON(this);
+        return array_merge($commonTransactionObject,$childClassObject);
     }
 }
