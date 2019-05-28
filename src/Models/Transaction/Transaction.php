@@ -113,12 +113,14 @@ abstract class Transaction{
      * @param signer - Transaction signer.
      * @returns InnerTransaction
      */
-    // public function toAggregate(PublicAccount $signer): InnerTransaction {
-    //     if ($this->type === TransactionType::AGGREGATE_BONDED || $this->type === TransactionType::AGGREGATE_COMPLETE) {
-    //         throw new Error('Inner transaction cannot be an aggregated transaction.');
-    //     }
-    //     return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
-    // }
+    public function toAggregate(PublicAccount $signer): InnerTransaction {
+        if ($this->type === TransactionType::AGGREGATE_BONDED || $this->type === TransactionType::AGGREGATE_COMPLETE) {
+            throw new Error('Inner transaction cannot be an aggregated transaction.');
+        }
+        $inner = new InnerTransaction();
+        $inner->buildFromTransaction($this,$signer);
+        return $inner;
+    }
 
     /**
      * Transaction pending to be included in a block
