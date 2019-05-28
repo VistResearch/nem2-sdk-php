@@ -79,8 +79,8 @@ class Serializer{
 												$this->data->Message,
 												$Mosaic);
 
-		array_merge($output, $version, $type, $Transaction, $TransferTransactionBody);
-		return $TransferTransactionBody;
+		$tx = array_merge($output, $version, $type, $Transaction, $TransferTransactionBody);
+		return $tx;
 	}
 
 	// input are public key string
@@ -104,9 +104,9 @@ class Serializer{
 
 		$AccountLinkTransactionBody = array_merge($this->data->RemoteAccountKey,$this->data->AccountLinkAction);
 
-		$this->data = array_merge($version,$type,$Transaction,$AccountLinkTransactionBody);
+		$tx = array_merge($version,$type,$Transaction,$AccountLinkTransactionBody);
 
-		return $AccountLinkTransactionBody;
+		return $tx;
 
 	}
 
@@ -133,7 +133,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
 
-		return $AccountPropertyModificationTransactionBody;
+		return $tx;
 	}
 
 	public function addMinApprovalDelta(int $l){
@@ -169,7 +169,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$ModifyMultisigAccountTransactionBody);
 
-		return $AccountPropertyModificationTransactionBody;		
+		return $tx;		
 	}
 
 	public function buildModifyAccountPropertyEntityTypeTransaction(){
@@ -190,7 +190,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$AccountPropertyModificationTransactionBody);
 
-		return $ModifyAccountPropertyEntityTypeTransactionBody;
+		return $tx;
 	}
 
 	public function addMosaic(Array $value){
@@ -231,7 +231,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$SecretLockTransactionBody);
 
-		return $SecretLockTransactionBody;
+		return $tx;
 	}
 
 	public function addProof(string $proof){
@@ -256,7 +256,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$SecretProofTransactionBody);
 
-		return $SecretProofTransactionBody;
+		return $tx;
 	}
 
 	public function addNamespaceType(int $type){
@@ -301,7 +301,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$RegisterNamespaceTransactionBody);
 
-		return $RegisterNamespaceTransactionBody;		
+		return $tx;		
 	}
 
 	public function addHash(string $hex){
@@ -322,7 +322,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$LockFundsTransactionBody);
 
-		return $LockFundsTransactionBody;		
+		return $tx;		
 
 	}
 
@@ -340,7 +340,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$ModifyAccountPropertyMosaicTransactionBody);
 
-		return $LockFundsTransactionBody;	
+		return $tx;	
 	}
 	public function addActionType(int $action){
 		$this->data["ActionType"] = SerializeBase::serializeUInt8($action);
@@ -363,7 +363,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$MosaicAliasTransactionBody);
 
-		return $MosaicAliasTransactionBody;	
+		return $tx;	
 	}
 
 	public function addDirection(int $action){
@@ -387,7 +387,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$MosaicSupplyChangeTransactionBody);
 
-		return $MosaicSupplyChangeTransactionBody;	
+		return $tx;	
 	}
 	public function addAddress(string $Address){
 		$this->data["Address"] = Base32::decode($Address,"array");
@@ -407,7 +407,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$AddressAliasTransactionBody);
 
-		return $AddressAliasTransactionBody;			
+		return $tx;			
 	}
 
 
@@ -439,7 +439,7 @@ class Serializer{
 
 		$tx = array_merge($version,$type,$Transaction,$MosaicDefinitionTransactionBody);
 
-		return $MosaicDefinitionTransactionBody;			
+		return $tx;			
 
 	}
 }
