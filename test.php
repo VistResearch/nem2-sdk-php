@@ -2,9 +2,11 @@
 
 
 require 'vendor/autoload.php';
-use NEM\util\Base32;
 
-use NEM\Models\Mosaic\MosaicNonce;
+// use NEM\Models\Account\Account;
+// use NEM\Tests\AccountTest;
+
+NEM\Tests\AccountTest::Test();
 
 // $a = NEM\Core\SerializeBase::serializeString("我");
 // print_r($a);
@@ -14,10 +16,10 @@ use NEM\Models\Mosaic\MosaicNonce;
 // $a = $a % 256;
 // var_dump(unpack("C*",hex2bin("b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf")));
 // $nonce = MosaicNonce::createFromHex("00000000");
-$pbkey = "7D08373CFFE4154E129E04F0827E5F3D6907587E348757B0F87D2F839BF88246";
-$a = unpack("h*",$pbkey);
-$a = unpack("C*",hex2bin($pbkey));
-var_dump($a);
+// $pbkey = "7D08373CFFE4154E129E04F0827E5F3D6907587E348757B0F87D2F839BF88246";
+// $a = unpack("h*",$pbkey);
+// $a = unpack("C*",hex2bin($pbkey));
+// var_dump($a);
 // $data = array_merge($nonce->nonce ,  $a);
 // // var_dump(pack("C*" , ...$data));
 // // var_dump(pack("C*" , ...[49,50,51]));

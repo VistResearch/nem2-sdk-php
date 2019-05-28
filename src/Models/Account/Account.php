@@ -4,14 +4,14 @@ namespace NEM\Models\Account;
 
 use NEM\core\keyPair;
 use NEM\Models\Account\PublicAccount;
-use NEM\Models\Account\Addresss;
+use NEM\Models\Account\Address;
 
-class account{
+class Account{
 
 	private $address; // Address
 	private $keyPair; // Keypair
 
-	function __construct(Addresss $address, KeyPair $keyPair = null){
+	function __construct(Address $address, KeyPair $keyPair = null){
 		$this->address = $address;
 		$this->keyPair = $keyPair;
 		return;
