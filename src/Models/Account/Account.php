@@ -11,7 +11,7 @@ class Account{
 	private $address; // Address
 	private $keyPair; // Keypair
 
-	function __construct(Address $address, KeyPair $keyPair = null){
+	function __construct(Address $address, KeyPair $keyPair){
 		$this->address = $address;
 		$this->keyPair = $keyPair;
 		return;

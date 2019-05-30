@@ -171,12 +171,12 @@ abstract class Transaction{
      * @memberof Transaction
      */
     // TODO
-    public function reapplyGiven(Deadline $deadline = Deadline::create()): Transaction {
-        if ($this->isUnannounced()) {
-            return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
-        }
-        throw new Error('an Announced transaction can\'t be modified');
-    }
+    // public function reapplyGiven(Deadline $deadline = Deadline::create()): Transaction {
+    //     if ($this->isUnannounced()) {
+    //         return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
+    //     }
+    //     throw new Error('an Announced transaction can\'t be modified');
+    // }
 
     /**
      * @description get the byte size of a transaction
