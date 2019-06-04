@@ -4,11 +4,11 @@
 require 'vendor/autoload.php';
 
 // use NEM\Models\Account\Account;
-// use NEM\Tests\AccountTest;
+use NEM\Tests\Models\Account\AccountTest;
 
-NEM\Tests\AccountTest::Test();
+AccountTest::Test();
 
-// $a = NEM\Core\SerializeBase::serializeString("我");
+$a = NEM\Core\SerializeBase::serializeString("我");
 // print_r($a);
 // $a = Base32::decode("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3","array");
 // VAR_DUMP($a);

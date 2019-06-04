@@ -107,6 +107,9 @@ class KeyPair{
 
 
 	private function generateInnerPrivatekey(string $privateKey): string{
+    if (strlen($privateKey) != 64){
+      throw new Exception("Invalid privatekey\n");
+    }
 		$secretKey = Sodium_Util::hex2bin($privateKey);
 
 		if (PHP_INT_SIZE === 4) {
