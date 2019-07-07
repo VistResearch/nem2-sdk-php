@@ -30,6 +30,7 @@ class Account {
      */
     public $address;
     public $keyPair;
+    public $signSchema;
 
     private function __construct(
                         /**
@@ -39,9 +40,14 @@ class Account {
                         /**
                          * The account keyPair, public and private key.
                          */
-                        KeyPair $keyPair) {
+                        KeyPair $keyPair,
+                        /**
+                         * The Sign Schema (KECCAK_REVERSED_KEY / SHA3).
+                         */
+                        string $signSchema = "SHA3") {
         $this->address = $address;
         $this->keyPair = $keyPair;
+        $this->signSchema = $signSchema;
     }
 
     /**
@@ -50,18 +56,18 @@ class Account {
      * @param networkType - Network type
      * @return {Account}
      */
-    public static function createFromPrivateKey(string $privateKey, int $networkType): Account {
-        $keyPair = KeyPair::createFromPrivateKey($privateKey);
-        $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType);
-        return new Account($address,$keyPair);
+    public static function createFromPrivateKey(string $privateKey, int $networkType, string $signSchema = "SHA3"): Account {
+        $keyPair = KeyPair::createFromPrivateKey($privateKey, $signSchema);
+        $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType, $signSchema);
+        return new Account($address,$keyPair, $signSchema);
     }
 
-    public static function generateNewAccount(int $networkType): Account {
+    public static function generateNewAccount(int $networkType, string $signSchema = "SHA3"): Account {
         $keyPair = KeyPair::generateNewPair();
 
-        $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType);
+        $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType, $signSchema);
 
-        return new Account($address,$keyPair);
+        return new Account($address,$keyPair, $signSchema);
     }
 
     /**
@@ -77,7 +83,7 @@ class Account {
      * @return {PublicAccount}
      */
     public function publicAccount(): PublicAccount {
-        return PublicAccount::createFromPublicKey($this->publicKey, $this->address->networkType);
+        return PublicAccount::createFromPublicKey($this->publicKey, $this->address->networkType, $this->signSchema);
     }
 
     /**
@@ -94,7 +100,7 @@ class Account {
      * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public function sign(Transaction $transaction, $generationHash): SignedTransaction {
+    public function sign(Transaction $transaction, $generationHash): Array {
         return $transaction->signWith($this, $generationHash);
     }
 
@@ -104,7 +110,7 @@ class Account {
      * @param data - Data to be signed
      * @return {string} - Signed data result
      */
-    public function signData(string $data): string {
-        return $this->KeyPair->signData($data);
+    public function signData(string $data, string $signSchema = "SHA3"): string {
+        return $this->KeyPair->signData($data, $signSchema);
     }
 }

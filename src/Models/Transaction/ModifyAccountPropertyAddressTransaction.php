@@ -10,8 +10,9 @@ use NEM\Models\Transaction\AccountPropertyModification;
 use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Account\PropertyType;
+
 use NEM\Core\SerializeBase;
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 
 
@@ -89,7 +90,7 @@ class ModifyAccountPropertyAddressTransaction extends Transaction{
      * @returns serialized tx 
      */
     protected function serialize(): Array {
-    	$s = new Serializer();
+    	$s = new Buffer();
     	$s->addDeadline($this->deadline->toDTO());
     	$s->addFee($this->maxFee->toDTO());
         $s->addVersion($this->versionToDTO());

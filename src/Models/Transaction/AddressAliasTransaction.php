@@ -14,7 +14,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -111,7 +111,7 @@ class AddressAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-    	$s = new Serializer();
+    	$s = new Buffer();
     	$s->addDeadline($this->deadline->toDTO());
     	$s->addVersion($this->versionToDTO());
     	$s->addFee($this->maxFee->toDTO());

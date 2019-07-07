@@ -15,7 +15,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 class MosaicSupplyChangeTransaction extends Transaction {
 
@@ -108,7 +108,7 @@ class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected serialize(): Array {
-        $s = new Serializer();
+        $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
         $s->addVersion($this->versionToDTO());

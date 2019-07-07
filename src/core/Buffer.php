@@ -5,7 +5,7 @@ namespace NEM\Core;
 use NEM\Core\SerializeBase;
 use NEM\util\Base32;
 
-class Serializer{
+class Buffer{
 	// All method return a list of int between 0 ~ 255
 	const NULL_SENTINEL = 0xffffffff;
 	const TransferTransactionElements = ["Recipient","MessageSize","Message","MosaicNum","Mosaic","Version","Fee","Deadline"]

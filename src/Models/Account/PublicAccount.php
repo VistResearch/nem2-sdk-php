@@ -68,14 +68,10 @@ class PublicAccount {
     /**
      * Create DTO object
      */
-    // public function toDTO(): Array {
-    //     $nameList =  get_class_vars(get_class($this));
-    //     $Dto = [];
-    //     foreach ($nameList as $key => $value) {
-    //         $Dto[$key] = $this->$key;
-    //     }
-    //     return $Dto;
-    // }
+    public function toDTO(): Array {
+        return ["publicKey"=>$this->publicKey,
+                "address"=>$this->address->toDTO()];
+    }
 
     // static function fromDTO($DTOArray): PublicAccount{
     //     return new PublicAccount($DTOArray["publicKey"],$DTOArray["address"]);

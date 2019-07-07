@@ -14,7 +14,7 @@ use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
 use NEM\Core\SerializeBase;
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 
@@ -95,7 +95,7 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected serialize(): Array {
-    	$s = new Serializer();
+    	$s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
         $s->addVersion($this->versionToDTO());

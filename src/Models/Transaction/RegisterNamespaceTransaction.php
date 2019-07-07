@@ -13,7 +13,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 use NEM\Core\Identifier;
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -162,9 +162,9 @@ class RegisterNamespaceTransaction extends Transaction {
      * @internal
      * @returns {VerifiableTransaction}
      */
-    protected serialize(): VerifiableTransaction {
+    protected serialize(): Array {
 
-    	$s = new Serializer();
+    	$s = new Buffer();
     	$s->addDeadline($this->deadline->toDTO());
     	$s->addFee($this->maxFee->toDTO());
     	$s->addVersion($this->versionToDTO());

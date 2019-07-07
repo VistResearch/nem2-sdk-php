@@ -1,5 +1,7 @@
 <?php
 
+use kornrunner\Keccak;
+
 if (class_exists('ParagonIE_Sodium_Core_Ed25519', false)) {
     return;
 }
@@ -89,10 +91,10 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
      * @throws SodiumException
      * @throws TypeError
      */
-    public static function publickey_from_secretkey($sk)
+    public static function publickey_from_secretkey($sk, $signSchema = "SHA3")
     {
-        /** @var string $sk */
-        $sk = hash('sha3-512', self::substr($sk, 0, 32), true);
+        /** @var string $sk */        
+        $sk = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
         $sk[0] = self::intToChr(
             self::chrToInt($sk[0]) & 248
         );
@@ -206,11 +208,10 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
      * @throws SodiumException
      * @throws TypeError
      */
-    public static function sign_detached($message, $sk)
+    public static function sign_detached($message, $sk, $signSchema = "SHA3")
     {
         # crypto_hash_sha3-512(az, sk, 32);
-        $az =  hash('sha3-512', self::substr($sk, 0, 32), true);
-
+        $az = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
         # az[0] &= 248;
         # az[31] &= 63;
         # az[31] |= 64;

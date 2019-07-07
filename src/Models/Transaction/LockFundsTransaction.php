@@ -13,7 +13,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.
  * When aggregate bonded transaction is confirmed funds are returned to LockFundsTransaction signer.
@@ -119,7 +119,7 @@ class LockFundsTransaction extends Transaction {
      * @return {VerifiableTransaction}
      */
     protected function serialize(): Array {
-    	$s = new Serializer();
+    	$s = new Buffer();
     	$s->addDeadline($this->deadline->toDTO());
     	$s->addVersion($this->versionToDTO());
     	$s->addType($this->type);

@@ -2,7 +2,6 @@
 
 namespace NEM\Models\Transaction;
 
-import {CosignatureTransaction as CosignaturetransactionLibrary} from 'nem2-library';
 use NEM\Models\Account\Account';
 use NEM\Models\Transaction\AggregateTransaction';
 use NEM\Models\Transaction\CosignatureSignedTransaction';

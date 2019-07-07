@@ -12,33 +12,35 @@ class KeyPair{
 	private $innerPrivateKey; //binary, build by pbk.prk
 	private $innerPublicKey; // binary, pbk
 
+
+  /**
+   * should always build keypair object from this
+   * build a keypair object
+   * @param privateKey (should be a hex string with len = 64)
+   * @returns keyPair object
+   */
+  static function createFromPrivateKeyString(string $privateKey,string $signSchema = "SHA3"): keyPair{
+    $innerPrivateKey = keyPair::generateInnerPrivatekey($privateKey, $signSchema);
+    return new KeyPair($innerPrivateKey, $signSchema);
+  }
+
     /**
      * private key transfer
      * @param privateKey (should be a hex string with len = 64)
      * @returns Publickey (hex string with len = 64)
      */
-	static function privatekeyToPublicbkey(string $privateKey): string{
+	static function privatekeyToPublicbkey(string $privateKey,string $signSchema = "SHA3"): string{
 		$secretKey = Sodium_Util::hex2bin($privateKey);
 
 		if (PHP_INT_SIZE === 4) {
-           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey);
+           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey, $signSchema);
        	} else {
-           $publicKey = Ed25519::publickey_from_secretkey($secretKey);
+           $publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
        	}
 
 		return bin2hex($publicKey);
 	}
 
-    /**
-     * should always build keypair object from this
-     * build a keypair object
-     * @param privateKey (should be a hex string with len = 64)
-     * @returns keyPair object
-     */
-	static function createFromPrivateKey(string $privateKey): keyPair{
-		$innerPrivateKey = keyPair::generateInnerPrivatekey($privateKey);
-		return new keyPair($innerPrivateKey);
-	}
 
     /**
      * build a new keypair object with random seed
@@ -51,7 +53,7 @@ class KeyPair{
        	} else {
             $innerPrivateKey = Ed25519::keypair($seed);
        	}
-       	return new KeyPair($innerPrivateKey);
+       	return new KeyPair($innerPrivateKey, $signSchema);
 	}
 
     /**
@@ -61,14 +63,14 @@ class KeyPair{
      * @param publicKey (hex string with len = 64)
      * @returns true/false
      */
-	static function verify(string $signature, string $message, string $publicKey){
+	static function verify(string $signature, string $message, string $publicKey,string $signSchema = "SHA3"){
 		$sig = hex2bin($signature);
 		$pbk = hex2bin($publicKey);
 
 		if (PHP_INT_SIZE === 4) {
-           return Ed25519_32::verify_detached($sig, $message, $pbk);
+           return Ed25519_32::verify_detached($sig, $message, $pbk, $signSchema);
         } else {
-           return Ed25519::verify_detached($sig, $message, $pbk);
+           return Ed25519::verify_detached($sig, $message, $pbk, $signSchema);
         }		
 	}
 
@@ -93,29 +95,29 @@ class KeyPair{
      * sign a message string with a built up keypair
      * @returns {string} (hex string with len = 128)
      */
-	public function signData(string $message): string{
+	public function signData(string $message,string $signSchema = "SHA3"): string{
 
 		if (PHP_INT_SIZE === 4) {
-           $sig = Ed25519_32::sign_detached($message, $this->innerPrivateKey);
+           $sig = Ed25519_32::sign_detached($message, $this->innerPrivateKey, $signSchema);
         } else {
-           $sig = Ed25519::sign_detached($message, $this->innerPrivateKey);
+           $sig = Ed25519::sign_detached($message, $this->innerPrivateKey, $signSchema);
         }
-        return bin2hex($sig);
+    return bin2hex($sig);
 	}
 
 
 
 
-	private function generateInnerPrivatekey(string $privateKey): string{
+	private function generateInnerPrivatekey(string $privateKey,string $signSchema = "SHA3"): string{
     if (strlen($privateKey) != 64){
       throw new Exception("Invalid privatekey\n");
     }
 		$secretKey = Sodium_Util::hex2bin($privateKey);
 
 		if (PHP_INT_SIZE === 4) {
-           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey);
+           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey, $signSchema);
        	} else {
-           $publicKey = Ed25519::publickey_from_secretkey($secretKey);
+           $publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
        	}
        return $secretKey.$publicKey;
 	}
@@ -123,13 +125,13 @@ class KeyPair{
     /**
      * please don't directly call this to build a keypair
      */
-    function __construct(string $innerPrivateKey) {
-        $this->innerPrivateKey = $innerPrivateKey;
-        if (PHP_INT_SIZE === 4) {
-	        $this->innerPublicKey = Ed25519_32::publickey_from_secretkey($innerPrivateKey);
-    	}
-    	else{
-    		$this->innerPublicKey = Ed25519::publickey_from_secretkey($innerPrivateKey);
-    	}
-    }
+  function __construct(string $innerPrivateKey,string $signSchema = "SHA3") {
+      $this->innerPrivateKey = $innerPrivateKey;
+      if (PHP_INT_SIZE === 4) {
+        $this->innerPublicKey = Ed25519_32::publickey_from_secretkey($innerPrivateKey, $signSchema);
+  	}
+  	else{
+  		$this->innerPublicKey = Ed25519::publickey_from_secretkey($innerPrivateKey, $signSchema);
+  	}
+  }
 }

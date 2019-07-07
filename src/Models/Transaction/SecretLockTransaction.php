@@ -15,7 +15,7 @@ use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
 use NEM\Core\SerializeBase;
-use NEM\Core\Serializer;
+use NEM\Core\Buffer;
 
 class SecretLockTransaction extends Transaction {
 

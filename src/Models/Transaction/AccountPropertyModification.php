@@ -56,7 +56,7 @@ class AccountPropertyModification{
      */
     public static function createForMosaic(int $modificationType,
                                 MosaicId $mosaicId): AccountPropertyModification{
-    return new AccountPropertyModification($modificationType, $mosaicId->id->toDTO(),"Mosaic");
+        return new AccountPropertyModification($modificationType, $mosaicId->id->toDTO(),"Mosaic");
     }
 
     /**
@@ -66,7 +66,7 @@ class AccountPropertyModification{
      * @returns {AccountPropertyModification}
      */
     public static function createForEntityType(int $modificationType,int $entityType): AccountPropertyModification{
-    return new AccountPropertyModification($modificationType, $entityType, "Transaction Type");
+        return new AccountPropertyModification($modificationType, $entityType, "Transaction Type");
     }
 
     /**

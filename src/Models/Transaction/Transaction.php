@@ -9,6 +9,8 @@ use NEM\Models\Transaction\SignedTransaction;
 use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\AggregateTransactionInfo;
 
+use kornrunner\Keccak as Keccak;
+
 abstract class Transaction{
 
 	/**
@@ -68,11 +70,11 @@ abstract class Transaction{
      * @param account - The account to sign the transaction
      * @returns {SignedTransaction}
      */
-    public function signWith(Account $account): SignedTransaction {
+    public function signWith(Account $account, string $signSchema = "SHA3"): SignedTransaction {
         $bytes = $this->serialize();
-        $payload = $account->sign(pack("C*",...array_slice($bytes,0,100)));
+        $payload = $account->signData(pack("C*",...array_slice($bytes,0,100)), $signSchema);
         $hashBuffer = array_merge(array_slice($bytes,4,36),$payload,array_slice($bytes,100));
-        $hash = hash("sha3-256",pack("C*",...$hashBuffer));
+        $hash = ($signSchema === "SHA3") ? hash("sha3-256",pack("C*",...$hashBuffer)) : Keccak::hash(pack("C*",...$hashBuffer),256);
 
         return new SignedTransaction(
             $payload,
@@ -204,27 +206,27 @@ abstract class Transaction{
         return $this->serialize();
     }
 
-    /**
-     * @description Create JSON object
-     * @returns {Object}
-     * @memberof Transaction
-     */
-    public function toJSON() {
-        $commonTransactionObject = [
-            "type" => $this->type,
-            "networkType" => $this->networkType,
-            "version" => $this->versionToDTO(),
-            "maxFee" => $this->maxFe->toDTO(),
-            "deadline" => $this->deadlin->toDTO(),
-            "signature" => $this->signature ? $thi->signature : '',
-        ];
+    // /**
+    //  * @description Create JSON object
+    //  * @returns {Object}
+    //  * @memberof Transaction
+    //  */
+    // public function toJSON() {
+    //     $commonTransactionObject = [
+    //         "type" => $this->type,
+    //         "networkType" => $this->networkType,
+    //         "version" => $this->versionToDTO(),
+    //         "maxFee" => $this->maxFe->toDTO(),
+    //         "deadline" => $this->deadlin->toDTO(),
+    //         "signature" => $this->signature ? $thi->signature : '',
+    //     ];
 
-        if ($this->signer) {
-            array_merge($commonTransactionObject, [$signer: $this->signer->publicKey]);
-        }
+    //     if ($this->signer) {
+    //         array_merge($commonTransactionObject, [$signer: $this->signer->publicKey]);
+    //     }
 
-        // TODO
-        $childClassObject = SerializeTransactionToJSON(this);
-        return array_merge($commonTransactionObject,$childClassObject);
-    }
+    //     // TODO
+    //     $childClassObject = SerializeTransactionToJSON(this);
+    //     return array_merge($commonTransactionObject,$childClassObject);
+    // }
 }
