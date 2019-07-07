@@ -2,14 +2,30 @@
 
 
 require 'vendor/autoload.php';
+use kornrunner\Keccak as Keccak;
 
-// use NEM\Models\Account\Account;
-use NEM\Tests\Models\Account\AccountTest;
 
-AccountTest::Test();
 
-$a = NEM\Core\SerializeBase::serializeString("我");
+// use NEM\Core\Format\RawAddress as A;
+$char1 = "bb2e12344321ababaa";
+$ar = [80,81,82,83,84,85];
+var_dump(pack("C*", ...$ar));
+$arr = [3140358708,1127590827,2852126720];
+// hex2bin($char1);
+// print(Keccak::hash(hex2bin($char1), 256));
+// $sha3_256bit = hash("keccak256","");
+// print_r(A::uint8ToUint32($ar));
+// print_r(A::hexToUint8($char1));
+// $a = A::stringToAddress("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3");
+// print_r(A::addressToString($a));
+// require './tests/Models/Account/AccountTest.php';
+// $charMap = array_flip(str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'));
+
+// print_r($charMap);
+// $a = A::Base32Decode("SB3KUBHA");
 // print_r($a);
+// $b = A::Base32Encode([144,118,170,4,224]);
+// print($b);
 // $a = Base32::decode("SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3","array");
 // VAR_DUMP($a);
 
