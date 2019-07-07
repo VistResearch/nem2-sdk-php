@@ -6,7 +6,7 @@ I implement the elliptic curve with sodium_compact and Keccak with kornrunner/ke
 
 ## Core/Buffer.php
 Another difference is about the buffer file. I use this buffer object to serialize the transaction. There are method about add objects like deadline, account to this buffer object and method about serialize to a binary array. Every transaction type correspond to one method in this object.
-
+	
 ## Core/SerializeBase.php
 Some basic method used in Buffer.php.
 
