@@ -38,9 +38,8 @@ class MultisigCosignatoryModification {
     /**
      * @internal
      */
-    public function toCatbuffer() {
-        $key = unpack("C*",hex2bin($this->cosignatoryPublicAccount->publicKey));
-        $type = [$this->type & 0xff];
-        return array_merge($type,$key);
+    public function toDTO() {
+        return ["cosignatoryPublicKey" => $this->cosignatoryPublicAccount->publicKey,
+                "type" => $this->type];
     }
 }

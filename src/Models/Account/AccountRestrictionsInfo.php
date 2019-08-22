@@ -2,8 +2,9 @@
 
 namespace NEM\Models\Account;
 
+use NEM\Models\Account\AccountRestriction;
 
-class AccountPropertiesInfo {
+class AccountRestrictionsInfo {
 
     /**
      * Constructor
@@ -12,7 +13,7 @@ class AccountPropertiesInfo {
      */
 
     public $meta; // any
-    public $accountProperties; //Array of AccountProperties
+    public $accountRestrictions; //Array of AccountProperties
     function __construct(
                 /**
                  * meta
@@ -21,9 +22,9 @@ class AccountPropertiesInfo {
                 /**
                  * Properties.
                  */
-                Array $accountProperties) {
+                AccountRestriction $accountRestrictions) {
         $this->meta = $meta;
-        $this->accountProperties = $accountProperties;
+        $this->accountRestrictions = $accountRestrictions;
 
     }
 }

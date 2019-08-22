@@ -5,6 +5,7 @@ namespace NEM\Models\Account;
 use NEM\core\KeyPair;
 use NEM\Models\Account\AccountMetadata;
 use NEM\Models\Account\Addresss;
+use NEM\Models\Account\PublicAccount;
 
 class AccountInfo{
     
@@ -28,6 +29,10 @@ class AccountInfo{
         $this->mosaics = $mosaics;
         $this->importance = $importance;
         $this->importanceHeight = $importanceHeight;
+    }
+
+    public function publicAccount(): PublicAccount{
+        return PublicAccount::createFromPublicKey($this->publicKey,$this->address->networkType);
     }
 
 } 

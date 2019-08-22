@@ -59,12 +59,12 @@ class SignedTransaction {
      * Create DTO object
      */
     public function toDTO() {
-        return {
-            "payload": $this->payload,
-            "hash": $this->hash,
-            "signer": $this->signer,
-            "type": $this->type,
-            "networkType": $this->networkType,
-        };
+        return [
+            "payload" => $this->payload,
+            "hash" => $this->hash,
+            "signer" => $this->signer,
+            "type" => $this->type,
+            "networkType" => $this->networkType,
+        ];
     }
 }

@@ -16,10 +16,9 @@ class MosaicInfo{
 	public $owner; // PublicAccount
 	public $revision; // int
 	public $properties; //MosaicProperties
-	public $levy; // any
 
 	function __construct(string $metaId, MosaicId $mosaicId, UInt64 $supply, UInt64 $height, PublicAccount $owner,
-						int $revision, MosaicProperties $properties, $levy = null){
+						int $revision, MosaicProperties $properties){
 		$this->metaId = $metaId;
 		$this->mosaicId = $mosaicId;
 		$this->supply = $supply;
@@ -27,7 +26,6 @@ class MosaicInfo{
 		$this->owner = $owner;
 		$this->revision = $revision
 		$this->properties = $properties;
-		$this->levy = $levy;
 	}
 
 	/**

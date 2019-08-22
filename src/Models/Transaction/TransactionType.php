@@ -79,26 +79,38 @@ class TransactionType {
     const SECRET_PROOF = 0x4252;
 
     /**
-     * Account property address transaction type
+     * Account restriction address transaction type
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_ADDRESS = 0x4150;
+    const MODIFY_ACCOUNT_RESTRICTION_ADDRESS = 0x4150;
 
     /**
-     * Account property mosaic transaction type
+     * Account restriction mosaic transaction type
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_MOSAIC = 0x4250;
+    const MODIFY_ACCOUNT_RESTRICTION_MOSAIC = 0x4250;
 
     /**
-     * Account property entity type transaction type
+     * Account restriction operation transaction type
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 0x4350;
+    const MODIFY_ACCOUNT_RESTRICTION_OPERATION = 0x4350;
 
     /**
      * Link account transaction type
      * @type {number}
      */
     const LINK_ACCOUNT = 0x414C;
+
+    /**
+     * Mosaic address restriction type
+     * @type {number}
+     */
+    const MOSAIC_ADDRESS_RESTRICTION = 0x4251;
+
+    /**
+     * Mosaic global restriction type
+     * @type {number}
+     */
+    const MOSAIC_GLOBAL_RESTRICTION = 0x4151;
 }

@@ -10,10 +10,6 @@ namespace NEM\Models\Namespace;
 use NEM\Models\Namespace\Alias;
 
 class EmptyAlias extends Alias{
-    /**
-     * The alias type
-     */
-    public $type; // number;
 
     /**
      * Create EmptyAlias object

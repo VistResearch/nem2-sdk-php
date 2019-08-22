@@ -11,17 +11,16 @@ use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Account\PropertyType;
 
-use NEM\Core\SerializeBase;
-use NEM\Core\Buffer;
+use NEM\Infrastructure\Buffer\AccountRestrictionsAddressTransactionBuffer as Buffer;
 
 
 
 
-class ModifyAccountPropertyAddressTransaction extends Transaction{
+class AccountAddressRestrictionModificationTransaction extends Transaction{
 
 	
     public $modifications;
-    public $propertyType;
+    public $restrictionType;
 
     /**
      * Create a modify account property address transaction object
@@ -34,32 +33,32 @@ class ModifyAccountPropertyAddressTransaction extends Transaction{
      */
     
 	public static function create(Deadline $deadline,
-                         int $propertyType,
+                         int $restrictionType,
                          Array $modifications,
                          int $networkType,
                          UInt64 $maxFee = new UInt64([0, 0])): ModifyAccountPropertyAddressTransaction {
-        return new AccountLinkTransaction($networkType,
+        return new AccountAddressRestrictionModificationTransaction($networkType,
             TransactionVersion::MODIFY_ACCOUNT_PROPERTY_ADDRESS,
             $deadline,
             $maxFee,
-            $propertyType,
+            $restrictionType,
             $modifications);
     }
 
-    function __construct(int $networkType, int $version, Deadline $deadline, UInt64 $maxFee, int $propertyType, Array $modifications, string $signature = "", PublicAccount $signer = null, TransactionInfo $ransactionInfo= null){
+    function __construct(int $networkType, int $version, Deadline $deadline, UInt64 $maxFee, int $restrictionType, Array $modifications, string $signature = "", PublicAccount $signer = null, TransactionInfo $ransactionInfo= null){
     	$this->networkType = $networkType;
 	    $this->version = $version; 
 	    $this->deadline = $deadline; 
 	    $this->maxFee = $maxFee; 
 	    $this->modifications = $modifications;
-        $this->propertyType = $propertyType;
+        $this->restrictionType = $restrictionType;
 
 	    // $this->signature = $signature; 
 	    // $this->signer = $signer; 
 	    // $this->transactionInfo = $transactionInfo; 
 
 
-    	parent::__construct(TransactionVersion::MODIFY_ACCOUNT_PROPERTY_ADDRESS, $networkType, $version, $deadline, $maxFee, $signature, $signer, $ransactionInfo);
+    	parent::__construct(TransactionVersion::MODIFY_ACCOUNT_PROPERTY_ADDRESS, $networkType, $version, $deadline, $maxFee, $signature, $signer, $transactionInfo);
     }
 
     /**
@@ -90,10 +89,14 @@ class ModifyAccountPropertyAddressTransaction extends Transaction{
      * @returns serialized tx 
      */
     protected function serialize(): Array {
-    	$s = new Buffer();
-    	$s->addDeadline($this->deadline->toDTO());
-    	$s->addFee($this->maxFee->toDTO());
-        $s->addVersion($this->versionToDTO());
+        $s = new Buffer();
+        $s->addDeadline($this->deadline->toDTO());
+        $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MODIFY_ACCOUNT_PROPERTY_ADDRESS);
+        $s->addSize(154);
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
         $modifications = [];
         foreach ($this->modifications as $key => $value) {
@@ -101,9 +104,9 @@ class ModifyAccountPropertyAddressTransaction extends Transaction{
         }
 
         $s->addModifications($modifications);
-        $s->addPropertyType($this->propertyType);
+        $s->addRestrictionType($this->restrictionType);
 
-        return $s->buildAccountPropertiesAddressTransaction();
+        return $s->build();
     }
 
 

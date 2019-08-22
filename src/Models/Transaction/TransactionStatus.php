@@ -36,11 +36,11 @@ class TransactionStatus {
                 /**
                  * The transaction deadline.
                  */
-                Deadline $deadline,
+                Deadline $deadline = null,
                 /**
                  * The height of the block at which it was confirmed or rejected.
                  */
-                UInt6 $heigh) {
+                UInt64 $height = null) {
     	$this->group = $group;
     	$this->status = $status;
     	$this->hash = $hash;

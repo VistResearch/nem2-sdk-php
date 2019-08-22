@@ -3,11 +3,11 @@
 namespace NEM\Models\Transaction
 
 use NEM\Models\Account\Address;
-use NEM\Models\Account\PropertyModificationType;
+use NEM\Models\Account\RestrictionModificationType;
 use NEM\Models\Mosaic\MosaicId;
 use NEM\Models\Transaction\TransactionType;
 
-class AccountPropertyModification{
+class AccountRestrictionModification{
 
     /**
      * Constructor
@@ -45,8 +45,8 @@ class AccountPropertyModification{
      * @returns {AccountPropertyModification}
      */
     public static function createForAddress(int $modificationType, Address $address)
-    		: AccountPropertyModification {
-        return new AccountPropertyModification($modificationType, $address->plain(),"Address");
+    		: AccountRestrictionModification {
+        return new AccountRestrictionModification($modificationType, $address->plain(),"Address");
     }
     /**
      * Create an mosaic filter for account property modification
@@ -55,8 +55,8 @@ class AccountPropertyModification{
      * @returns {AccountPropertyModification}
      */
     public static function createForMosaic(int $modificationType,
-                                MosaicId $mosaicId): AccountPropertyModification{
-        return new AccountPropertyModification($modificationType, $mosaicId->id->toDTO(),"Mosaic");
+                                MosaicId $mosaicId): AccountRestrictionModification{
+        return new AccountRestrictionModification($modificationType, $mosaicId->id->toDTO(),"Mosaic");
     }
 
     /**
@@ -65,14 +65,14 @@ class AccountPropertyModification{
      * @param entityType - modification value (Transaction Type)
      * @returns {AccountPropertyModification}
      */
-    public static function createForEntityType(int $modificationType,int $entityType): AccountPropertyModification{
-        return new AccountPropertyModification($modificationType, $entityType, "Transaction Type");
+    public static function createForEntityType(int $modificationType,int $entityType): AccountRestrictionModification{
+        return new AccountRestrictionModification($modificationType, $entityType, "Transaction Type");
     }
 
     /**
      * @internal
      */
-    toDTO() {
+    public function toDTO() {
 
         if ($this->value instanceof int){
             $m = $this->value;

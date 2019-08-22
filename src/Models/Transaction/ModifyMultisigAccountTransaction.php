@@ -13,6 +13,8 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
+use NEM\Infrastructure\Buffer\MultisigModificationTransactionBuffer as Buffer;
+
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
  * A modify multisig account transaction holds an array of multisig cosignatory modifications,
@@ -83,6 +85,7 @@ class ModifyMultisigAccountTransaction extends Transaction {
                 string $signature = "",
                 PublicAccount $signer = null,
                 TransactionInfo $transactionInfo = null) {
+
         $this->modifications = $modifications;
         $this->minApprovalDelta = $minApprovalDelta;
         $this->minRemovalDelta = $minRemovalDelta;
@@ -117,10 +120,14 @@ class ModifyMultisigAccountTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-        $s = new Serializer();
+        $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
-        $s->addVersion($this->versionToDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MODIFY_MULTISIG_ACCOUNT);
+        $s->addSize($this->getsize());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
         $s->addMinApprovalDelta($this->data->minApprovalDelta);
         $s->addMinRemovalDelta($this->data->minRemovalDelta);
@@ -132,7 +139,7 @@ class ModifyMultisigAccountTransaction extends Transaction {
 
         $s->addModifications($modifications);
 
-        return $s->buildModifyMultisigAccountTransaction();
+        return $s->build();
     }
 
     

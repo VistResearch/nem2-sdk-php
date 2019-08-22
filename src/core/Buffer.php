@@ -209,8 +209,7 @@ class Buffer{
 	public function addDuration(Array $Duration){
 		if (sizeof($Duration) == 2){
 			$this->data["Duration"] = SerializeBase::serializeUInt64($Duration);
-		}
-		
+		}		
 	}
 
 	public function buildSecretLockTransaction(): Array{
@@ -345,6 +344,7 @@ class Buffer{
 	public function addActionType(int $action){
 		$this->data["ActionType"] = SerializeBase::serializeUInt8($action);
 	}
+
 	public function addMosaicId(Array $Id){
 		$this->data["MosaicId"] = SerializeBase::serializeUInt64($Id);
 	}

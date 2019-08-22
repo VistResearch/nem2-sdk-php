@@ -41,7 +41,7 @@ class MosaicNonce {
      *
      * @param id
      */
-    function __construct($nonce) {
+    function __construct(Array $nonce) {
         if (sizeof($nonce) !== 4) {
             throw Error('Invalid byte size for nonce, should be 4 bytes but received ' . sizeof($nonce));
         }

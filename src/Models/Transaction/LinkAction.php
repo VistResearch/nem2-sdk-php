@@ -3,6 +3,6 @@
 namespace NEM\Models\Transaction;
 
 class LinkAction {
-    Link = 0,
-    Unlink = 1,
+    const Link = 0,
+    const Unlink = 1,
 }

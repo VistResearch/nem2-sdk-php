@@ -13,7 +13,8 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 use NEM\Core\Identifier;
-use NEM\Core\Buffer;
+
+use NEM\Infrastructure\Buffer\NamespaceCreationTransactionBuffer as Buffer;
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -164,10 +165,14 @@ class RegisterNamespaceTransaction extends Transaction {
      */
     protected serialize(): Array {
 
-    	$s = new Buffer();
-    	$s->addDeadline($this->deadline->toDTO());
-    	$s->addFee($this->maxFee->toDTO());
-    	$s->addVersion($this->versionToDTO());
+        $s = new Buffer();
+        $s->addDeadline($this->deadline->toDTO());
+        $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::REGISTER_NAMESPACE);
+        $s->addSize($this->size());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
     	$s->addNamespaceType($this->namespaceType);
     	$s->addNamespaceId($this->namespaceId->id->toDTO());

@@ -3,8 +3,9 @@
 namespace NEM\Models\Account;
 
 use NEM\Models\Account\Addresss;
+use NEM\Models\Namespace\NamespaceName;
 
-class AccountProperties {
+class AccountNames {
 
     /**
      * Constructor
@@ -13,7 +14,7 @@ class AccountProperties {
      */
 
     public $address;
-    public $properties; // array of AccountProperty
+    public $NamespaceName; // array of AccountProperty
 
 
     function __construct(
@@ -24,10 +25,10 @@ class AccountProperties {
                 /**
                  * Properties.
                  */
-                Array $properties) {
+                Array $NamespaceName) {
 
     	$this->address = $address;
-    	$this->properties = $properties;
+    	$this->NamespaceName = $NamespaceName;
 
     }
 }

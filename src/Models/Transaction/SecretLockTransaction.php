@@ -15,7 +15,7 @@ use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
 use NEM\Core\SerializeBase;
-use NEM\Core\Buffer;
+use NEM\Infrustructure\Buffer\SecretLockTransactionBuffer as Buffer;
 
 class SecretLockTransaction extends Transaction {
 
@@ -141,18 +141,23 @@ class SecretLockTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-    	$s = new Serializer();
-    	$s->addDeadline($this->deadline->toDTO());
-    	$s->addVersion($this->versionToDTO());
-    	$s->addType($this->type);
-    	$s->addFee($this->maxFee->toDTO());
+        $s = new Buffer();
+        $s->addDeadline($this->deadline->toDTO());
+        $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::SECRET_LOCK);
+        $s->addSize(202);
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
+
+
     	$s->addMosaic($this->mosaic->toDTO());
     	$s->addDuration($this->Duration->toDTO());
     	$s->addHashAlgorithm($this->hashType);
     	$s->addSecret($this->secret);
     	$s->addRecipient($this->recipient->plain());
 
-        return $s->buildSecretLockTransaction();
+        return $s->build();
     }
 
 }

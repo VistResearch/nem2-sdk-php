@@ -2,31 +2,31 @@
 
 namespace NEM\Models\Account;
 
-use NEM\Models\Account\PropertyType;
+use NEM\Models\Account\RestrictionType;
 
 
-class AccountProperty {
+class AccountRestriction {
 
     /**
      * Constructor
-     * @param propertyType
+     * @param restrictionType
      * @param values
      */
 
-    public $propertyType; //PropertyType
+    public $restrictionType; //PropertyType
     public $values; // ob
 
     function __construct(
             /**
              * Account property type
              */
-            PropertyType $propertyType,
+            int $restrictionType,
             /**
              * Property values.
              */
             Array $values) {
 
-    	$this->propertyType = $propertyType;
+    	$this->restrictionType = $restrictionType;
     	$this->values = $values;
 
     }

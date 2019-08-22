@@ -10,7 +10,7 @@
 namespace NEM\Models\Namespace;
 
 class AliasType {
-    None = 0;
-    Mosaic = 1;
-    Address = 2;
+    const None = 0;
+    const Mosaic = 1;
+    const Address = 2;
 }

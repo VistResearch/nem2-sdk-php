@@ -14,6 +14,8 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\ransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
+use NEM\Infrucstructure\Buffer\MosaicCreationTransactionBuffer as Buffer;
+
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
  * This is done via a mosaic definition transaction.
@@ -114,10 +116,14 @@ class MosaicDefinitionTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-        $s = new Serializer();
+        $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
-        $s->addVersion($this->versionToDTO());
         $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MOSAIC_DEFINITION);
+        $s->addSize($this->getsize());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
         $s->addDivisibility($this->mosaicProperties->divisibility);
         $s->addDuration($this->mosaicProperties->duration ? $this->mosaicProperties->duration->toDTO() : []);
@@ -139,7 +145,7 @@ class MosaicDefinitionTransaction extends Transaction {
         }
         $s->addMosaicProperties($mosaicFlag);
 
-        return $s->buildMosaicDefinitionTransaction();
+        return $s->build();
     }
 
 }

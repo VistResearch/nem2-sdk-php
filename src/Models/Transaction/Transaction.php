@@ -5,9 +5,12 @@ namespace NEM\Models\Transaction;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
+use NEM\Models\Account\Account;
 use NEM\Models\Transaction\SignedTransaction;
 use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\AggregateTransactionInfo;
+
+use NEM\Core\Format\Convert;
 
 use kornrunner\Keccak as Keccak;
 
@@ -54,6 +57,7 @@ abstract class Transaction{
     		|| ($transactionInfo instanceof AggregateTransactionInfo) ) ){
     		$this->transactionInfo = $transactionInfo;
     	}
+        print("type is ".$type."\n");
         $this->type = $type;
         $this->networkType = $networkType;
         $this->version = $version;
@@ -70,16 +74,28 @@ abstract class Transaction{
      * @param account - The account to sign the transaction
      * @returns {SignedTransaction}
      */
-    public function signWith(Account $account, string $signSchema = "SHA3"): SignedTransaction {
+    public function signWith(Account $account, string $generationHash, string $signSchema = "SHA3"): SignedTransaction {
         $bytes = $this->serialize();
-        $payload = $account->signData(pack("C*",...array_slice($bytes,0,100)), $signSchema);
-        $hashBuffer = array_merge(array_slice($bytes,4,36),$payload,array_slice($bytes,100));
+
+        $signingBytes = $generationHash.Convert::uint8ToHex(array_slice($bytes, 4 + 64 + 32));
+        $chars = array_map("chr", Convert::HexTouint8($signingBytes));
+        $bin = join($chars);
+
+        $payload = Convert::HexTouint8($account->signData($bin, $signSchema));
+        
+        $pbKey = Convert::HexTouint8($account->publicKey());
+        $payload = array_merge(array_slice($bytes,0,4),$payload,$pbKey,array_slice($bytes,100));
+
+        $generationHashArray = Convert::HexTouint8($generationHash);
+        $hashBuffer = array_merge(array_slice($payload,4,32),array_slice($payload,4+64,32),$generationHashArray,array_slice($payload,4+64+32));
+
+
         $hash = ($signSchema === "SHA3") ? hash("sha3-256",pack("C*",...$hashBuffer)) : Keccak::hash(pack("C*",...$hashBuffer),256);
 
         return new SignedTransaction(
-            $payload,
+            Convert::uint8ToHex($payload),
             $hash,
-            $account->publicKey,
+            $account->publicKey(),
             $this->type,
             $this->networkType);
     }
@@ -94,20 +110,26 @@ abstract class Transaction{
      * @internal
      * @returns {Array<number>}
      */
-    public function aggregateTransaction(): number[] {
-        $signer = unpack("C*",hex2bin($this->signer->publicKey));
+    public function aggregateTransaction(): Array {
+        $signer = $this->signer;
         $resultBytes = $this->serialize();
-        $resultBytes = aray_slice($resultBytes,0, 4 + 64 + 32);
+        
+        $resultBytes = array_slice($resultBytes,4 + 64 + 32);
+        
         $resultBytes = array_merge($signer,$resultBytes);
-        $resultBytes = aray_slice($resultBytes,32 + 2 + 2, 16);
+        
+        $resultBytes = array_merge(array_slice($resultBytes,0,32 + 2 + 2)
+                                ,array_slice($resultBytes,32 + 2 + 2 + 16));
+
+
         $tmpArray = [
             (sizeof($resultBytes) + 4 & 0x000000ff),
             (sizeof($resultBytes) + 4 & 0x0000ff00) >> 8,
             (sizeof($resultBytes) + 4 & 0x00ff0000) >> 16,
             (sizeof($resultBytes) + 4 & 0xff000000) >> 24
-        ]
+        ];
 
-        return array_merge($tmpArray,$resultBytes)
+        return array_merge($tmpArray,$resultBytes);
     }
 
     /**
@@ -129,8 +151,8 @@ abstract class Transaction{
      * @returns {boolean}
      */
     public function isUnconfirmed(): boolean {
-        return $this->transactionInfo != null && $this->transactionInfo->height->compact() === 0
-            && $this->transactionInfo->hash === $this->transactionInfo->merkleComponentHash;
+        return ($this->transactionInfo != null) && ($this->transactionInfo->height->compact() === 0)
+            && ($this->transactionInfo->hash === $this->transactionInfo->merkleComponentHash);
     }
 
     /**
@@ -146,8 +168,8 @@ abstract class Transaction{
      * @returns {boolean}
      */
     public function hasMissingSignatures(): boolean {
-        return $this->transactionInfo != null && $this.transactionInfo->height->compact() === 0 &&
-            $this->transactionInfo->hash !== $this.transactionInfo->merkleComponentHash;
+        return $this->transactionInfo != null && $this->transactionInfo->height->compact() === 0 &&
+            $this->transactionInfo->hash !== $this->transactionInfo->merkleComponentHash;
     }
 
     /**
@@ -161,9 +183,9 @@ abstract class Transaction{
     /**
      * @internal
      */
-    public function versionToDTO(): number {
-        $versionDTO = dechex ($this->networkType) . '0' + dechex ($this->version);
-        return hexdec($versionDTO);
+    public function versionToDTO(): int {
+        $versionDTO = $this->networkType * 0x100 + $this->version;
+        return $versionDTO;
     }
 
     /**
@@ -185,7 +207,7 @@ abstract class Transaction{
      * @returns {number}
      * @memberof Transaction
      */
-    public function size(): int {
+    protected function size(): int {
         $byteSize = 4 // size
                     + 64 // signature
                     + 32 // signer

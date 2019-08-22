@@ -3,6 +3,6 @@
 namespace NEM\Models\Transaction;
 
 class MessageType {
-    PlainMessage = 0;
-    EncryptedMessage = 1;
+    const PlainMessage = 0;
+    const EncryptedMessage = 1;
 }

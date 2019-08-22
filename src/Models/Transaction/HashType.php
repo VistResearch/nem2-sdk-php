@@ -11,10 +11,10 @@ namespace NEM\Models\Transaction;
  */
 
 class HashType {
-    Op_Sha3_256 = 0;
-    Op_Keccak_256 = 1;
-    Op_Hash_160 = 2;
-    Op_Hash_256 = 3;
+    const Op_Sha3_256 = 0;
+    const Op_Keccak_256 = 1;
+    const Op_Hash_160 = 2;
+    const Op_Hash_256 = 3;
 }
 
 function HashTypeLengthValidator(int $hashType, string $input): boolean {

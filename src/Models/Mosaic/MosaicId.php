@@ -1,6 +1,6 @@
 <?php
 
-namespace NEM\Models\Mosiac;
+namespace NEM\Models\Mosaic;
 
 use NEM\Models\Id;
 use NEM\Core\Identifier;
@@ -8,8 +8,17 @@ use NEM\Core\Identifier;
 class MosaicId{
 
 	public $id; // Id
-	function __construct(Id $id){
-		$this->$id = $id;
+
+	function __construct($id){
+        if(is_array($id) && sizeof($id) == 2){
+            $this->id = new Id($id);
+        }
+        else if ($id instanceof Id){
+            $this->id = $id;
+        }
+        else{
+            print("QQQ\n\n");
+        }
 	}
 
 	//  TODO : not sure how this work
@@ -36,24 +45,8 @@ class MosaicId{
         return $this->id->toHex();
     }
 
-	// public function toDTO(): Array {
- //        $nameList =  get_class_vars(get_class($this));
- //        $Dto = [];
- //        foreach ($nameList as $key => $value) {
- //            $Dto[$key] = $this->$key;
- //        }
- //        return $Dto;
- //    }
+	public function toDTO(): Array {
+        return $this->id->toDTO();
+    }
 
- //    public function FromDTO($DTOArray){
- //        foreach ($DTOArray as $key => $value) {
- //           $this->$key = $value;
- //        }
- //        return;
- //    }
-
- //    public function toCatbuffer(int $network_type){
- //    	// ignore networktype?
- //    	return Catbuffer::uInt64($this->id);
- //    }
 }

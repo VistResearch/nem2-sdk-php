@@ -119,16 +119,20 @@ class LockFundsTransaction extends Transaction {
      * @return {VerifiableTransaction}
      */
     protected function serialize(): Array {
-    	$s = new Buffer();
-    	$s->addDeadline($this->deadline->toDTO());
-    	$s->addVersion($this->versionToDTO());
-    	$s->addType($this->type);
-    	$s->addFee($this->maxFee->toDTO());
+        $s = new Buffer();
+        $s->addDeadline($this->deadline->toDTO());
+        $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::LOCK);
+        $s->addSize(176);
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
+        
     	$s->addMosaic($this->mosaic->toDTO());
     	$s->addDuration($this->Duration->toDTO());
     	$s->addHash($this->hash);
 
-        return $s->buildLockFundsTransaction();
+        return $s->build();
     }
 
 }

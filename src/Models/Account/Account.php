@@ -2,7 +2,7 @@
 
 namespace NEM\Models\Account;
 
-use NEM\core\keyPair;
+use NEM\Core\KeyPair as KeyPair;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Account\Address;
 
@@ -14,8 +14,6 @@ use NEM\Models\Transaction\EncryptedMessage;
 use NEM\Models\Transaction\PlainMessage;
 use NEM\Models\Transaction\SignedTransaction;
 use NEM\Models\Transaction\Transaction;
-use NEM\Models\Account\Address;
-use NEM\Models\Account\PublicAccount;
 
 
 /**
@@ -111,6 +109,6 @@ class Account {
      * @return {string} - Signed data result
      */
     public function signData(string $data, string $signSchema = "SHA3"): string {
-        return $this->KeyPair->signData($data, $signSchema);
+        return KeyPair::signData($data, $this->keyPair, $signSchema);
     }
 }

@@ -3,6 +3,7 @@
 namespace NEM\Models\Namespace;
 
 use NEM\Models\Namespace\Alias;
+use NEM\Models\Mosaic\MosaicId;
 
 class MosaicAlias extends Alias {
 
@@ -12,7 +13,10 @@ class MosaicAlias extends Alias {
      * @param type
      * @param mosaicId
      */
-
+    function __construct($type, MosaicId $mosaicId) {
+            $this->type = $type;
+            $this->mosaicId = $mosaicId;
+    }
 
 
     /**
@@ -31,7 +35,7 @@ class MosaicAlias extends Alias {
      * Get string value of mosaicId
      * @returns {string}
      */
-    public toHex(): string {
+    public function toHex(): string {
         return $this->mosaicId->toHex();
     }
 }

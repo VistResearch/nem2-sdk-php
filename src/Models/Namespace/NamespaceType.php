@@ -8,6 +8,6 @@ namespace NEM\Models\Namespace;
  * 1: Sub namespace.
  */
 class NamespaceType {
-    RootNamespace = 0;
-    SubNamespace = 1;
+    const RootNamespace = 0;
+    const SubNamespace = 1;
 }

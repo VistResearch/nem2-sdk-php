@@ -15,7 +15,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Buffer;
+use NEM\Infrastructure\Buffer\MosaicSupplyChangeTransactionBuffer as Buffer;
 
 class MosaicSupplyChangeTransaction extends Transaction {
 
@@ -111,7 +111,11 @@ class MosaicSupplyChangeTransaction extends Transaction {
         $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
-        $s->addVersion($this->versionToDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MOSAIC_SUPPLY_CHANGE);
+        $s->addSize($this->getsize());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
         $s->addMosaicId($this->mosaicId->id->toDTO());
         $s->addDirection($this->direction);

@@ -10,15 +10,15 @@ abstract class Alias{
      * - 1 : Mosaic id alias
      * - 2 : Address alias
      */
-    protected $type; // number;
+    public $type; // number;
 
     /**
      * The alias address
      */
-    protected $address; // Address;
+    public $address; // Address;
 
     /**
      * The alias mosaicId
      */
-    protected $mosaicId; // MosaicId;
+    public $mosaicId; // MosaicId;
 }

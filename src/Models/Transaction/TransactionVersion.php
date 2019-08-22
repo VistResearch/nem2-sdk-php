@@ -17,98 +17,111 @@ namespace NEM\Models\Transaction;
 
 class TransactionVersion {
 
+
     /**
      * Transfer Transaction transaction version.
      * @type {number}
      */
-    const TRANSFER = 3;
+    const TRANSFER = 0x01;
 
     /**
      * Register namespace transaction version.
      * @type {number}
      */
-    const REGISTER_NAMESPACE = 2;
+    const REGISTER_NAMESPACE = 0x01;
 
     /**
      * Mosaic definition transaction version.
      * @type {number}
      */
-    const MOSAIC_DEFINITION = 3;
+    const MOSAIC_DEFINITION = 0x01;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    const MOSAIC_SUPPLY_CHANGE = 2;
+    const MOSAIC_SUPPLY_CHANGE = 0x01;
 
     /**
      * Modify multisig account transaction version.
      * @type {number}
      */
-    const MODIFY_MULTISIG_ACCOUNT = 3;
+    const MODIFY_MULTISIG_ACCOUNT = 0x01;
 
     /**
      * Aggregate complete transaction version.
      * @type {number}
      */
-    const AGGREGATE_COMPLETE = 2;
+    const AGGREGATE_COMPLETE = 0x01;
 
     /**
      * Aggregate bonded transaction version
      */
-    const AGGREGATE_BONDED = 2;
+    const AGGREGATE_BONDED = 0x01;
 
     /**
      * Lock transaction version
      * @type {number}
      */
-    const LOCK = 1;
+    const LOCK = 0x01;
 
     /**
      * Secret Lock transaction version
      * @type {number}
      */
-    const SECRET_LOCK = 1;
+    const SECRET_LOCK = 0x01;
 
     /**
      * Secret Proof transaction version
      * @type {number}
      */
-    const SECRET_PROOF = 1;
+    const SECRET_PROOF = 0x01;
 
     /**
      * Address Alias transaction version
      * @type {number}
      */
-    const ADDRESS_ALIAS = 1;
+    const ADDRESS_ALIAS = 0x01;
 
     /**
      * Mosaic Alias transaction version
      * @type {number}
      */
-    const MOSAIC_ALIAS = 1;
+    const MOSAIC_ALIAS = 0x01;
 
     /**
-     * Account Property address transaction version
+     * Mosaic global restriction transaction version
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_ADDRESS = 1;
+    const MOSAIC_GLOBAL_RESTRICTION = 0x01;
 
     /**
-     * Account Property mosaic transaction version
+     * Mosaic address restriction transaction version
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_MOSAIC = 1;
+    const MOSAIC_ADDRESS_RESTRICTION = 0x01;
 
     /**
-     * Account Property entity type transaction version
+     * Account Restriction address transaction version
      * @type {number}
      */
-    const MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 1;
+    const MODIFY_ACCOUNT_RESTRICTION_ADDRESS = 0x01;
+
+    /**
+     * Account Restriction mosaic transaction version
+     * @type {number}
+     */
+    const MODIFY_ACCOUNT_RESTRICTION_MOSAIC = 0x01;
+
+    /**
+     * Account Restriction operation transaction version
+     * @type {number}
+     */
+    const MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE = 0x01;
 
     /**
      * Link account transaction version
      * @type {number}
      */
-    const LINK_ACCOUNT = 2;
+    const LINK_ACCOUNT = 0x01;
 }

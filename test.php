@@ -4,15 +4,104 @@
 require 'vendor/autoload.php';
 use kornrunner\Keccak as Keccak;
 
+use NEM\Core\Format\Convert as Convert;
+
+use NEM\Core\KeyPair as KeyPair;
+
+use NEM\Models\Transaction\TransferTransaction;
+
+use NEM\Models\Transaction\Deadline as Deadline;
+use NEM\Models\UInt64;
+use NEM\Models\Transaction\PlainMessage;
+use NEM\Models\Mosaic\Mosaic;
+use NEM\Models\Mosaic\MosaicId;
+use NEM\Models\Account\Address;
+use NEM\Models\Blockchain\NetworkType;
+use NEM\Models\Account\Account;
+
+use NEM\Tests\Models\Transaction\TestTransaction;
+use NEM\Tests\Models\Transaction\AccountAddressRestrictionModificationTransaction;
+use NEM\Core\Format\RawAddress;
+
+$prkey = '8D31B712AB28D49591EAF5066E9E967B44507FC19C3D54D742F7B3A255CFF4AB';
+$pbkey = '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1B';
+
+$prkey2 = '15923F9D2FFFB11D771818E1F7D7DDCD363913933264D58533CB3A5DD2DAA66A';
+$pbkey2 = '3FE4A1AA148F5E76891CE924F5DC05627A87047B2B4AD9242C09C0ECED9B2338'; 
+
+$saltStr = "0000000000000000000000000000000000000000000000000000000000000000";
+$generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
 
 
-// use NEM\Core\Format\RawAddress as A;
-$char1 = "bb2e12344321ababaa";
-$ar = [80,81,82,83,84,85];
-var_dump(pack("C*", ...$ar));
-$arr = [3140358708,1127590827,2852126720];
+
+// $aa = $char1->signData("00");
+// var_dump();
+// var_dump($char1->getPublicKey());
+// print(TransactionStatus::test());
+$D = Deadline::createFromDTO([0, 0]);
+$AD = Address::createFromRawAddress("NB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3");
+$MM = new MosaicId([3294802500, 2243684972]);
+$M = new Mosaic($MM, UInt64::fromUint(2));
+$P = PlainMessage::create('112345678975432q345678975432456786o57i64uehrgfhj2e4rfwegdsbfd23');
+// var_dump($D->toDTO());s
+$a = TransferTransaction::create($D,$AD,[$M],$P,NetworkType::MIJIN_TEST);
+$arra = $a->serialize();
+// var_dump(Convert::uint8ToHex($arra));
+// for($i = 145; $i < sizeof($arra); $i += 1){
+// 	print($i." ".$arra[$i]."\n");
+// }
+// $hx = Convert::uint8ToHex($arra);
+// print($hx);
+
+$acc = Account::createFromPrivateKey($prkey,NetworkType::MIJIN_TEST,"SHA3");
+$a->signer = Convert::HexTouint8($acc->publicKey());
+
+$aa = $a->aggregateTransaction();
+print(Convert::uint8ToHex($aa)."\n");
+// $a->build();
+// $arr = [3140358708,1127590827,2852126720];
 // hex2bin($char1);
-// print(Keccak::hash(hex2bin($char1), 256));
+// Convert::hexToUint8Reverse($sk)
+// $sk = Convert::hexToUint8Reverse($sk);
+// var_dump($sk);
+// $sk = Convert::uint8ToHex($sk);
+// call_user_func_array("pack", array_merge(array("C*"), $sk));
+// var_dump($sk);
+// $char1 = KeyPair::createFromPrivateKeyString($prkey);
+// $a = KeyPair::deriveSharedKey($char1,$pbkey2,$saltStr);
+// print("This is keccak pbkey\n");
+// $o = KeyPair::signData("AA",$char1);
+// print($o."\n");
+// print(KeyPair::verify($o,"AA",$pbkey));
+
+// $hs = hash_init('sha3-512');
+// hash_update($hs, "QQ");
+// hash_update($hs, "AA");
+// $nonceHash = hash_final($hs);
+// print($nonceHash."\n");
+
+// print(hash('sha3-512',"QQAA"));
+
+// $afterHash = Convert::hexToUint8(Keccak::hash($sk, 512));
+// $afterHash[1] &= 248;
+// $afterHash[32] &= 127;
+// $afterHash[32] |= 64;
+// print(strtoupper(Convert::uint8ToHex($afterHash)));
+
+
+// Hash step
+// $sk = "082a9e70d1ab588f6ad7b13ea71977b52ce03de0e7502358669b57fc03b18a45";
+// $sk = Convert::hexToUint8Reverse($sk);
+// $sk = call_user_func_array("pack", array_merge(array("C*"), $sk));
+// $afterHash = Convert::hexToUint8(Keccak::hash($sk, 512));
+// $afterHash[1] &= 248;
+// $afterHash[32] &= 127;
+// $afterHash[32] |= 64;
+
+
+
+
+
 // $sha3_256bit = hash("keccak256","");
 // print_r(A::uint8ToUint32($ar));
 // print_r(A::hexToUint8($char1));

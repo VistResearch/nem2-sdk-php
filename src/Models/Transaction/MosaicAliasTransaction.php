@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 namespace NEM\Models\Transaction;
 
@@ -14,7 +14,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Buffer;
+use NEM\Infrucstructure\Buffer\MosaicAliasTransactionBuffer as Buffer;
 
 class MosaicAliasTransaction extends Transaction {
 
@@ -108,16 +108,20 @@ class MosaicAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-		$s = new Buffer();
+        $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
-        $s->addVersion($this->versionToDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MOSAIC_DEFINITION);
+        $s->addSize($this->getsize());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
         $s->addActionType($this->actionType);
         $s->addNamespaceId($this->namespaceId->id->toDTO());
         $s->addMosaicId($this->mosaicId->id->toDTO());
 
-        return $s->buildMosaicAliasTransaction();
+        return $s->build();
 
     }
 

@@ -7,6 +7,6 @@
 namespace NEM\Models\Namespace;
 
 class AliasActionType {
-    Link = 0;
-    Unlink = 1;
+    const Link = 0;
+    const Unlink = 1;
 }

@@ -12,7 +12,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Buffer;
+use NEM\Infrastructure\Buffer\SecretProofTransactionBuffer as Buffer;
 
 class SecretProofTransaction extends Transaction {
 
@@ -108,14 +108,19 @@ class SecretProofTransaction extends Transaction {
     protected function serialize(): Array {
         $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
-        $s->addVersion($this->versionToDTO());
-        $s->addType($this->type);
         $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::SECRET_PROOF);
+        $s->addSize($this->size());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
+
+
         $s->addHashAlgorithm($this->hashType);
         $s->addSecret($this->secret);
         $s->addProof($this->proof);
 
-        return $s->buildSecretProofTransaction();
+        return $s->build();
     }
 
 }

@@ -20,12 +20,12 @@ class PublicAccount {
      * @param {int} networkType Network type
      * @returns {PublicAccount}
      */
-    static function createFromPublicKey(string $publicKey,int $networkType): publicAccount {
+    static function createFromPublicKey(string $publicKey,int $networkType, string $signSchema = "SHA3"): publicAccount {
         if ($publicKey == "" || strlen($publicKey) !== 64) {
             throw new Error('Not a valid public key');
         }
         
-        $address = Address::createFromPublicKey($publicKey, $networkType);
+        $address = Address::createFromPublicKey($publicKey, $networkType, $signSchema);
         return new PublicAccount($publicKey, $address);
     }
 
@@ -37,7 +37,7 @@ class PublicAccount {
      *      
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public function verifySignature(string $data, string $signature): bool {
+    public function verifySignature(string $data, string $signature, string $signSchema = "SHA3"): bool {
         if (strlen($signature)/ 2 != $Hash512) {
             throw new Error('Signature length is incorrect');
         }
@@ -45,7 +45,7 @@ class PublicAccount {
         if (!ctype_xdigit($signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
-        return KeyPair::verify($this->publicKey, $data, $signature);
+        return KeyPair::verify($this->publicKey, $data, $signature, $signSchema);
     }
 
     /**

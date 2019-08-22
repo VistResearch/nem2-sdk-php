@@ -11,32 +11,54 @@ class SerializeBase{
     {
         return [($l >> 0) & 0xff];
     }
-    public static function serializeUInt16(int $l)
+    public static function serializeUInt16(int $l, $flag = false)
     {
+        if($flag){
+            return [($l >> 0) & 0xff, ($l >> 8) & 0xff];  
+        }
         return [($l >> 8) & 0xff, ($l >> 0) & 0xff];
     }
-    public static function serializeUInt32(int $l)
+    public static function serializeUInt32(int $l, $flag = false)
     {
+        if($flag){
+            return [($l >> 0) & 0xff,
+                ($l >> 8) & 0xff,
+                ($l >> 16) & 0xff,
+                ($l >> 24) & 0xff];
+        }
         return [($l >> 24) & 0xff,
                 ($l >> 16) & 0xff,
                 ($l >> 8 ) & 0xff,
                 ($l >> 0 ) & 0xff];
     }
 
-    public static function serializeUInt64(Array $UInt64)
+    public static function serializeUInt64(Array $UInt64, $flag = false)
     {
+        if ($flag == true){
+            $uint64 = [
+                ($UInt64[0] >> 0) & 0xff,
+                ($UInt64[0] >> 8)  & 0xff,
+                ($UInt64[0] >> 16) & 0xff,
+                ($UInt64[0] >> 24) & 0xff,
+                ($UInt64[1] >> 0)  & 0xff,
+                ($UInt64[1] >> 8)  & 0xff,
+                ($UInt64[1] >> 16) & 0xff,
+                ($UInt64[1] >> 24) & 0xff
+            ];
+        }
+        else{
+            $uint64 = [
+                ($UInt64[1] >> 24) & 0xff,
+                ($UInt64[1] >> 16)  & 0xff,
+                ($UInt64[1] >> 8 ) & 0xff,
+                ($UInt64[1] >> 0 ) & 0xff,
+                ($UInt64[0] >> 24)  & 0xff,
+                ($UInt64[0] >> 16)  & 0xff,
+                ($UInt64[0] >> 8 ) & 0xff,
+                ($UInt64[0] >> 0 ) & 0xff
+            ];            
+        }
 
-
-        $uint64 = [
-            ($UInt64[1] >> 24) & 0xff,
-            ($UInt64[1] >> 16)  & 0xff,
-            ($UInt64[1] >> 8 ) & 0xff,
-            ($UInt64[1] >> 0 ) & 0xff,
-            ($UInt64[0] >> 24)  & 0xff,
-            ($UInt64[0] >> 16)  & 0xff,
-            ($UInt64[0] >> 8 ) & 0xff,
-            ($UInt64[0] >> 0 ) & 0xff
-        ];
         return $uint64;
     }
 
@@ -45,7 +67,7 @@ class SerializeBase{
     {
     	if ($str === null){
     		// If the parent should be null (provisioning a root namespace), then this field has to be set to 0xff, 0xff, 0xff, 0xff and the next field is omitted!
-    		$uint8 = [self::serializeInt($str)];
+    		$uint8 = [];
     	}
     	else{
 			// prepend size on 4 bytes
@@ -53,7 +75,7 @@ class SerializeBase{
             $uint8 = [];
 
 			// UTF-8 to binary
-			for ($i = 0; $i < $count; $i++) {
+			for ($i = 0; $i < $count ; $i++) {
 			    $dec = self::chrToInt(substr($str, $i, 1));
 			    array_push($uint8, $dec);
 			}		

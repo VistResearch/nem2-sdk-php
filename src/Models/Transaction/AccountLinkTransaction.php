@@ -9,9 +9,9 @@ use NEM\Models\Transaction\LinkAction;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\UInt64;
 use NEM\Models\Account\PublicAccount;
+use NEM\Models\Transaction\TransactionType;
 
-use NEM\Core\SerializeBase;
-use NEM\Core\Buffer as Buffer;
+use NEM\Infrastructure\Buffer\AccountLinkTransactionBuffer as Buffer;
 
 
 
@@ -88,8 +88,13 @@ class AccountLinkTransaction extends Transaction{
     	$s->addFee($this->maxFee->toDTO());
     	$s->addRemoteAccountKey($this->remoteAccountKey);
     	$s->addAccountLinkAction($this->linkAction);
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::LINK_ACCOUNT);
+        $s->addSize(153);
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
-        return $s->buildAccountLinkTransaction();
+        return $s->build();
     }
 
 

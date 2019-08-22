@@ -211,7 +211,7 @@ abstract class ParagonIE_Sodium_Core32_Ed25519 extends ParagonIE_Sodium_Core32_C
     public static function sign_detached($message, $sk, $signSchema = "SHA3")
     {
         # crypto_hash_sha512(az, sk, 32);
-        $az = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
+        $az = ($signSchema === "SHA3") ? hash('sha512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
 
         # az[0] &= 248;
         # az[31] &= 63;

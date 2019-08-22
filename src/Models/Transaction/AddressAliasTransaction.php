@@ -14,7 +14,7 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\Buffer;
+use NEM\Infrastructure\Buffer\AddressAliasTransactionBuffer as Buffer;
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -111,16 +111,23 @@ class AddressAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected function serialize(): Array {
-    	$s = new Buffer();
-    	$s->addDeadline($this->deadline->toDTO());
-    	$s->addVersion($this->versionToDTO());
-    	$s->addFee($this->maxFee->toDTO());
 
-    	$s->addActionType($this->actionType);
-    	$s->addNamespaceId($this->namespaceId->id->toDTO());
-    	$s->addAddress($this->address->plain());
+        $s = new Buffer();
+        $s->addDeadline($this->deadline->toDTO());
+        $s->addFee($this->maxFee->toDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::ADDRESS_ALIAS);
+        $s->addSize(154);
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
-        return $s->buildAddressAliasTransaction();
+        $s->addActionType($this->actionType);
+        $s->addNamespaceId($this->namespaceId->id->toDTO());
+        $s->addAddress($this->address->plain());
+
+
+
+        return $s->build();
     }
 
 }

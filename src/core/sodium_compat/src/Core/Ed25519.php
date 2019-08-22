@@ -1,6 +1,7 @@
 <?php
 
 use kornrunner\Keccak;
+use NEM\Core\Format\Convert as Convert;
 
 if (class_exists('ParagonIE_Sodium_Core_Ed25519', false)) {
     return;
@@ -94,13 +95,20 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
     public static function publickey_from_secretkey($sk, $signSchema = "SHA3")
     {
         /** @var string $sk */        
-        $sk = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
+        if ($signSchema === "SHA3"){
+            $sk = hash('sha3-512', self::substr($sk, 0, 32), true);
+        }
+        else{
+            $sk = Keccak::hash(self::substr($sk, 0, 32), 512, true);
+        }
+        /** @var string $sk */
         $sk[0] = self::intToChr(
             self::chrToInt($sk[0]) & 248
         );
         $sk[31] = self::intToChr(
             (self::chrToInt($sk[31]) & 63) | 64
         );
+
         return self::sk_to_pk($sk);
     }
 
@@ -211,7 +219,8 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
     public static function sign_detached($message, $sk, $signSchema = "SHA3")
     {
         # crypto_hash_sha3-512(az, sk, 32);
-        $az = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 256);
+        $az = ($signSchema === "SHA3") ? hash('sha3-512', self::substr($sk, 0, 32), true) : Keccak::hash(self::substr($sk, 0, 32), 512, true);
+
         # az[0] &= 248;
         # az[31] &= 63;
         # az[31] |= 64;
@@ -222,10 +231,13 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
         # crypto_hash_sha3-512_update(&hs, az + 32, 32);
         # crypto_hash_sha3-512_update(&hs, m, mlen);
         # crypto_hash_sha3-512_final(&hs, nonce);
-        $hs = hash_init('sha3-512');
-        hash_update($hs, self::substr($az, 32, 32));
-        hash_update($hs, $message);
-        $nonceHash = hash_final($hs, true);
+        $hashData = self::substr($az, 32, 32) . $message;
+        $nonceHash = ($signSchema === "SHA3") ? hash('sha3-512', $hashData, true) : Keccak::hash($hashData, 512, true);
+
+        // print("QQ\n");
+        // var_dump($nonceHash);
+        // print("after\n");
+        // var_dump(self::sc_reduce($nonceHash));
 
         # memmove(sig + 32, sk + 32, 32);
         $pk = self::substr($sk, 32, 32);
@@ -242,15 +254,14 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
         # crypto_hash_sha3-512_update(&hs, sig, 64);
         # crypto_hash_sha3-512_update(&hs, m, mlen);
         # crypto_hash_sha3-512_final(&hs, hram);
-        $hs = hash_init('sha3-512');
-        hash_update($hs, self::substr($sig, 0, 32));
-        hash_update($hs, self::substr($pk, 0, 32));
-        hash_update($hs, $message);
-        $hramHash = hash_final($hs, true);
+        $hashData = self::substr($sig, 0, 32) . self::substr($pk, 0, 32) . $message;
+        $hramHash = ($signSchema === "SHA3") ? hash('sha3-512', $hashData, true) : Keccak::hash($hashData, 512, true);
 
         # sc_reduce(hram);
         # sc_muladd(sig + 32, hram, az, nonce);
+
         $hram = self::sc_reduce($hramHash);
+
         $sigAfter = self::sc_muladd($hram, $az, $nonce);
         $sig = self::substr($sig, 0, 32) . self::substr($sigAfter, 0, 32);
 
@@ -259,6 +270,7 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
         } catch (SodiumException $ex) {
             $az = null;
         }
+
         return $sig;
     }
 
@@ -272,7 +284,7 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
      * @throws SodiumException
      * @throws TypeError
      */
-    public static function verify_detached($sig, $message, $pk)
+    public static function verify_detached($sig, $message, $pk, string $signSchema = "SHA3")
     {
         if (self::strlen($sig) < 64) {
             throw new SodiumException('Signature is too short');
@@ -304,17 +316,28 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
         $A = self::ge_frombytes_negate_vartime($pk);
 
         /** @var string $hDigest */
-        $hDigest = hash(
+        $hDigest = ($signSchema === "SHA3") ?
+        hash(
             'sha3-512',
             self::substr($sig, 0, 32) .
                 self::substr($pk, 0, 32) .
                 $message,
             true
-        );
-
+        ) :
+        Keccak::hash(self::substr($sig, 0, 32) .
+                self::substr($pk, 0, 32) .
+                $message
+            , 512
+            , true);
+        
+        // var_dump(bin2hex($hDigest));
         /** @var string $h */
-        $h = self::sc_reduce($hDigest) . self::substr($hDigest, 32);
-
+        $h = self::sc_reduce($hDigest);
+        // print("\n\n");
+        // var_dump(bin2hex($h));
+        // var_dump($A);
+        // var_dump(bin2hex(self::substr($sig, 32)));
+        // print("\n\n");
         /** @var ParagonIE_Sodium_Core_Curve25519_Ge_P2 $R */
         $R = self::ge_double_scalarmult_vartime(
             $h,
@@ -324,7 +347,7 @@ abstract class ParagonIE_Sodium_Core_Ed25519 extends ParagonIE_Sodium_Core_Curve
 
         /** @var string $rcheck */
         $rcheck = self::ge_tobytes($R);
-
+        // var_dump(bin2hex($rcheck));
         // Reset ParagonIE_Sodium_Compat::$fastMult to what it was before.
         ParagonIE_Sodium_Compat::$fastMult = $orig;
 

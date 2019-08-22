@@ -2,7 +2,7 @@
 
 namespace NEM\Models\Blockchain;
 
-class BlockchainScore{
+class BlockchainStorageInfo{
     public $numBlocks; // int;
     public $numTransactions; // int;
     public $numAccounts; // int
@@ -13,22 +13,6 @@ class BlockchainScore{
 	    $this->numTransactions = $numTransactions;
         $this->numAccounts = $numAccounts;
     }
-    // public function toDTO(): Array {
-    //     $nameList =  get_class_vars(get_class($this));
-    //     $Dto = [];
-    //     foreach ($nameList as $key => $value) {
-    //         $Dto[$key] = $this->$key;
-    //     }
-    //     return $Dto;
-    // }
-
-    // public function FromDTO($DTOArray){
-    //     foreach ($DTOArray as $key => $value) {
-    //        $this->$key = $value;
-    //     }
-    //     return;
-    // }
-
 
 }
 

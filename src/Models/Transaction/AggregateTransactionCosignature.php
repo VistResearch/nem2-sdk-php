@@ -33,8 +33,8 @@ class AggregateTransactionCosignature {
      */
     public function toDTO() {
         return [
-            "signature": $this->signature,
-            "signer": $this->signer->toDTO(),
+            "signature" => $this->signature,
+            "signer" => $this->signer->toDTO(),
         ];
     }
 }

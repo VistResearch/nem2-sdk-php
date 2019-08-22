@@ -64,11 +64,11 @@ class RawAddress {
      * @param {Uint8Array} publicKey The public key.
      * @param {number} networkIdentifier The network identifier.
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
-     * @returns {Uint8Array} The decoded address corresponding to the inputs.
+     * @returns {string} The decoded address corresponding to the inputs.
      */
-    static function publicKeyToAddress(Array $publicKey,
+    static function publicKeyToAddress(string $publicKey,
                                         $networkIdentifier,
-                                        string $signSchema = "SHA3"): Array{
+                                        string $signSchema = "SHA3"): String{
 
         $byteAddress = array(25);
         $byteAddress[0] = $networkIdentifier;
@@ -88,7 +88,7 @@ class RawAddress {
         $hash = $signSchema === "SHA3" ? hex2bin(hash("sha3-256",$checksumTarget)) : hex2bin(Keccak::hash($checksumTarget, 256));
         $hash = unpack('C*', substr($hash, 0, 4));
         $byteAddress = array_merge($byteAddress,$hash);
-        $byteAddress = call_user_func_array("pack", array_merge(array("C*"), $byteAddress));
+        $byteAddress = Base32::Base32Encode($byteAddress);
 
         return $byteAddress;
     }

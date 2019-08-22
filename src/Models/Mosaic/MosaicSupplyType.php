@@ -3,6 +3,6 @@
 namespace NEM\Models\Mosiac;
 
 class MosaicSupplyType {
-    Decrease = 0;
-    Increase = 1;
+    const Decrease = 0;
+    const Increase = 1;
 }

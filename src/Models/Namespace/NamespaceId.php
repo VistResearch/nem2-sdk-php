@@ -1,9 +1,10 @@
 <?php
 
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
 use NEM\Models\Id;
 use NEM\Core\Identifier;
+use NEM\Core\Format\Convert as Convert;
 
 class NamespaceId {
 
@@ -26,6 +27,7 @@ class NamespaceId {
     function __construct(Id $id) {
         if (is_array ($id)) {
             $this->id = new Id($id);
+            $this->fullName = "";
         } else if (is_string($id)) {
             $this->fullName = $id;
             $this->id = new Id(Identifier::generateNamespaceId($id));
@@ -38,13 +40,12 @@ class NamespaceId {
      * @returns {NamespaceId}
      */
 
-    // java code : https://github.com/nemtech/nem2-sdk-java/blob/master/src/main/java/io/nem/sdk/model/transaction/IdGenerator.java
-    // public static createFromEncoded(string $encoded): NamespaceId {
-    //     const uint = convert.hexToUint8(encoded).reverse();
-    //     const hex  = convert.uint8ToHex(uint);
-    //     const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
-    //     return namespace;
-    // }
+    public static function createFromEncoded(string $encoded): NamespaceId {
+        $uint = array_reverse(Convert::hexToUint8($encoded));
+        $hex  = Convert::uint8ToHex($uint);
+        $namespace = new NamespaceId(Id::fromHex($hex).toDTO());
+        return $namespace;
+    }
 
     /**
      * Get string value of id
@@ -64,5 +65,10 @@ class NamespaceId {
             return $this->id->equals($id->id);
         }
         return false;
+    }
+
+    public function toDTO(){
+        return ["id" => $this->id->toDTO(),
+                "fullName" => $this->fullName];
     }
 }

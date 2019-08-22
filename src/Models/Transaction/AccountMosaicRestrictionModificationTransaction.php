@@ -2,7 +2,7 @@
 
 namespace NEM\Models\Transaction;
 
-use NEM\Models\Account\PropertyType;
+use NEM\Models\Account\RestrictionType;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\UInt64;
@@ -13,30 +13,28 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\SerializeBase;
-use NEM\Core\Buffer;
+use NEM\Infrastructure\Buffer\AccountRestrictionsMosaicTransactionBuffer as Buffer;
 
-class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
+class AccountMosaicRestrictionModificationTransaction extends Transaction {
 
+	public $RestrictionType;
+	public $modifications;
     /**
-     * Create a modify account property entity type transaction object
+     * Create a modify account property mosaic transaction object
      * @param deadline - The deadline to include the transaction.
      * @param propertyType - The account property type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {ModifyAccountPropertyEntityTypeTransaction}
+     * @returns {ModifyAccountPropertyAddressTransaction}
      */
-    public $propertyType;
-    public $modifications;
-
     public static function create(Deadline $deadline,
-                         int $propertyType,
+                         int $RestrictionType,
                          Array $modifications,
                          int $networkType,
-                         UInt64 $maxFee: UInt64 = new UInt64([0, 0])): ModifyAccountPropertyEntityTypeTransaction {
-        return new ModifyAccountPropertyEntityTypeTransaction($networkType,
-            TransactionVersion::MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE,
+                         UInt64 $maxFee = new UInt64([0, 0])): ModifyAccountPropertyMosaicTransaction {
+        return new ModifyAccountPropertyMosaicTransaction($networkType,
+            TransactionVersion::MODIFY_ACCOUNT_PROPERTY_MOSAIC,
             $deadline,
             $maxFee,
             $propertyType,
@@ -59,24 +57,24 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                 int $version,
                 Deadline $deadline,
                 UInt64 $maxFee,
-                int $propertyType,
+                int $RestrictionType,
                 Array $modifications,
-                string $signature = "", 
+                string $signature = "",
                 PublicAccount $signer = null, 
                 TransactionInfo $ransactionInfo= null) {
-    	$this->propertyType = $propertyType;
+    	$this->RestrictionType = $RestrictionType;
     	$this->modifications = $modifications;
-        parent::__construct(TransactionType::MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, $networkType, $version, $deadline, $maxFee, $signature, $signer, $transactionInfo);
+        parent::__construct(TransactionType::MODIFY_ACCOUNT_PROPERTY_MOSAIC, $networkType, $version, $deadline, $maxFee, $signature, $signer, $transactionInfo);
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a ModifyAccountPropertyEntityTypeTransaction
+     * @description get the byte size of a ModifyAccountPropertyMosaicTransaction
      * @returns {number}
-     * @memberof ModifyAccountPropertyEntityTypeTransaction
+     * @memberof ModifyAccountPropertyMosaicTransaction
      */
-    public function getsize(): int {
-        $byteSize = super->size();
+    public function size(): int {
+        $byteSize = parent::size();
 
         // set static byte size fields
         $bytePropertyType = 1;
@@ -84,8 +82,8 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 
         // each modification contains :
         // - 1 byte for modificationType
-        // - 2 bytes for the modification value (transaction type)
-        $byteModifications = 3 * sizeof($this->modifications);
+        // - 8 bytes for the modification value (mosaicId)
+        $byteModifications = 9 * sizeof($this->modifications);
 
         return $byteSize + $bytePropertyType + $byteModificationCount + $byteModifications;
     }
@@ -94,22 +92,24 @@ class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
      * @internal
      * @returns {VerifiableTransaction}
      */
-    protected serialize(): Array {
-    	$s = new Buffer();
+    protected function serialize(): Array {
+        $s = new Buffer();
         $s->addDeadline($this->deadline->toDTO());
         $s->addFee($this->maxFee->toDTO());
-        $s->addVersion($this->versionToDTO());
+        $s->addSignature($this->signature);
+        $s->addType(TransactionType::MODIFY_ACCOUNT_RESTRICTION_MOSAIC);
+        $s->addSize($this->getsize());
+        $s->addVersion($this->version);
+        $s->addSigner($this->signer);
 
-        $s->addPropertyType($this->propertyType);
-
-        $modifications = [];
+    	$modifications = [];
         foreach ($this->data->modifications as $key => $value) {
             array_merge($modifications,$value->toCatbuffer());
         }
 
         $s->addModifications($modifications);
-
-        return $s->buildModifyAccountPropertyEntityTypeTransaction();
+        $s->addRestrictionType($this->RestrictionType);
+        return $s->buildModifyAccountPropertyMosaicTransaction();
     }
 
 }
