@@ -13,6 +13,8 @@ Some basic method used in Buffer.php.
 ## Core/Identifier.php
 Implement the Id related part, both namespace and Mosaic are included in this file.
 
+## Core/keyPair.php
+Some methods are used in old version, and the new version also implemented( except deriveSharedKey(), not sure how this work)
 
 ## Models/
 Basically all files in Model/ are same as those in TS/JS SDK. And I copied the discription in TS/JS SDK for user to read.
