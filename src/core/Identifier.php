@@ -3,11 +3,13 @@
 namespace NEM\Core;
 
 use NEM\Models\Mosaic\MosaicNonce;
+use NEM\Core\Format\Convert as Convert;
+
 
 class Identifier{
 	static function generateMosaicId(MosaicNonce $nonce, string $pbkey): Array{
 		$data = array_merge($nonce->nonce , unpack("C*",hex2bin($pbkey) ) );
-		$result = hash('sha3-256', pack("C*" , ...$data));
+			$result = hash('sha3-256', pack("C*" , ...$data));
 
 		// little endian
 		$tmp0 = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
@@ -21,7 +23,7 @@ class Identifier{
 
 	static function generateNamespaceId(string $name): Array{
 		$name = "." . $name;
-		$names = split ('.', $name);
+		$names = explode('.', $name);
 
 
 		if ($name == ''){
@@ -41,20 +43,27 @@ class Identifier{
 	    return $ids;
 	}
 
-	static function generateSubNamespaceId(int $parentId, string $name): int{
+	static function generateSubNamespaceId(Array $parentId, string $name): Array{
 
-		$IdArray = [($parentId >> 24) & 0xff,
-					($parentId >> 16) & 0xff,
-					($parentId >> 8) & 0xff,
-					($parentId >> 0) & 0xff];
+		$IdArray = [($parentId[0] >> 0) & 0xff,
+					($parentId[0] >> 8) & 0xff,
+					($parentId[0] >> 16) & 0xff,
+					($parentId[0] >> 24) & 0xff,
+					($parentId[1] >> 0) & 0xff,
+					($parentId[1] >> 8) & 0xff,
+					($parentId[1] >> 16) & 0xff,
+					($parentId[1] >> 24) & 0xff];
 
 		$nameArray = unpack('C*', $name);
 
-		$data = array_merge($IdArray , $nameArray );
+		$data = array_merge($IdArray ,$nameArray);
 
 
 		$hash = hash('sha3-256', pack("C*" , ...$data));
 
+		// $hash = hash('sha3-256', $name);
+
+		var_dump(Convert::uint8ToUint32(Convert::HexToUint8($hash)));
 		// little endian
 		$tmp0 = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
 		$tmp0 = hexdec($tmp0[1]);
