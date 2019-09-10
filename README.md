@@ -1,5 +1,5 @@
 # nem-sdk for PHP
-Most models of this sdk are based on JS sdk[https://github.com/nemtech/nem2-sdk-typescript-javascript], you can check it for more information.
+Most models of this sdk are based on [nem2-sdk-typescript-javascript](https://github.com/nemtech/nem2-sdk-typescript-javascript), you can check it for more information.
 
 ## Install
 ``
