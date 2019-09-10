@@ -4,6 +4,7 @@ namespace NEM\Tests\Models\Transaction;
 
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\Transaction\PlainMessage;
+use NEM\Models\Mosaic\NetworkCurrencyMosaic;
 use NEM\Models\Mosaic\Mosaic;
 use NEM\Models\Mosaic\MosaicId;
 use NEM\Models\Account\Address;
@@ -24,6 +25,14 @@ class TestTransaction{
 	const addr2_sha3 = "SDOJYZGMZGQXSZSOHNPXFTLGELE3K6GTSMOUCLGA";
 	const addr2_keccak = "SD5VCXSQGVHSMU4SPKJ5Y7BSJYVVSOFXQ6KS5QRQ";
 
+	static function TestingAccount(){
+		return  Account::createFromPrivateKey(
+    '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930',
+    NetworkType::MIJIN_TEST);	
+	}
+
+	public $tx;
+
 	static function staticDeadline(): Deadline{
 		return Deadline::createFromDTO([0, 0]);
 	}
@@ -33,15 +42,34 @@ class TestTransaction{
 	}
 
 	static function staticMosaic(): Mosaic{
-		$TestMosaicId = new MosaicId([3294802500, 2243684972]);
-		return Mosaic($TestMosaicId, UInt64::fromUint(1));
+		return NetworkCurrencyMosaic::createRelative(100);
 	}
 
-	static function staticFee(): UInt64{
-		return UInt64::fromUint(1);
+	static function staticFee(int $source = 1): UInt64{
+		return UInt64::fromUint($source);
 	}
 
-	public function verify(){
+	static function NetworkType(){
+		return NetworkType::MIJIN_TEST;
+	}
 
+	public function verifyMaxFee(UInt64 $target){
+		return $tx->maxFee->equals($target);
+	}
+
+	public function verifyUnannounced(boolean $result){
+		return $tx->isUnannounced() === $result;
+	}
+
+	public function verifyUnconfirmed(boolean $result){
+		return $tx->isUnconfirmed() === $result;
+	}
+
+	public function verifyisConfirmed(boolean $result){
+		return $tx->isConfirmed() === $result;
+	}
+
+	public function verifyhasMissingSignatures(boolean $result){
+		return $tx->hasMissingSignatures() === $result;
 	}
 }

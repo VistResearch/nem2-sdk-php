@@ -18,8 +18,12 @@ use NEM\Models\Mosaic\MosaicId;
 use NEM\Models\Account\Address;
 use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\Account\Account;
+use NEM\Core\Identifier;
 
+
+use NEM\Tests\Models\Transaction\TestTransfer;
 use NEM\Tests\Models\Transaction\TestTransaction;
+
 use NEM\Tests\Models\Transaction\AccountAddressRestrictionModificationTransaction;
 use NEM\Core\Format\RawAddress;
 
@@ -45,6 +49,9 @@ $M = new Mosaic($MM, UInt64::fromUint(2));
 $P = PlainMessage::create('112345678975432q345678975432456786o57i64uehrgfhj2e4rfwegdsbfd23');
 // var_dump($D->toDTO());s
 $a = TransferTransaction::create($D,$AD,[$M],$P,NetworkType::MIJIN_TEST);
+// if($a instanceof TransferTransaction){
+// 	print("QQ\n");
+// }
 $arra = $a->serialize();
 // var_dump(Convert::uint8ToHex($arra));
 // for($i = 145; $i < sizeof($arra); $i += 1){
@@ -57,7 +64,11 @@ $acc = Account::createFromPrivateKey($prkey,NetworkType::MIJIN_TEST,"SHA3");
 $a->signer = Convert::HexTouint8($acc->publicKey());
 
 $aa = $a->aggregateTransaction();
-print(Convert::uint8ToHex($aa)."\n");
+// print(Convert::uint8ToHex($aa)."\n");
+// print_r(TestTransfer::Test());
+// print_r(TestTransaction::staticMosaic());
+print_r(Identifier::generateSubNamespaceId([0,0],"cat"));
+
 // $a->build();
 // $arr = [3140358708,1127590827,2852126720];
 // hex2bin($char1);
