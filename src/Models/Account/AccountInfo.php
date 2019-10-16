@@ -2,14 +2,11 @@
 
 namespace NEM\Models\Account;
 
-use NEM\core\KeyPair;
-use NEM\Models\Account\AccountMetadata;
 use NEM\Models\Account\Addresss;
 use NEM\Models\Account\PublicAccount;
 
 class AccountInfo{
     
-    public $meta; //OptionalAccountMetadata;
     public $address; // Address
     public $addressHeight; // UInt64
     public $publicKey; // string
@@ -19,9 +16,8 @@ class AccountInfo{
     public $importanceHeight; // UInt64
 
 
-    function __construct(AccountMetadata $meta,Adress $address,UInt64 $addressHeight, string $publicKey,
+    function __construct(Adress $address,UInt64 $addressHeight, string $publicKey,
                          UInt64 $publicKeyHeight, Array $mosaics, UInt64 $importance, UInt64 $importanceHeight) {
-        $this->meta = $meta;
         $this->address = $address;
         $this->addressHeight = $addressHeight;
         $this->publicKey = $publicKey;

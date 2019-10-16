@@ -55,7 +55,7 @@ class Account {
      * @return {Account}
      */
     public static function createFromPrivateKey(string $privateKey, int $networkType, string $signSchema = "SHA3"): Account {
-        $keyPair = KeyPair::createFromPrivateKey($privateKey, $signSchema);
+        $keyPair = KeyPair::createKeyPairFromPrivateKeyString($privateKey, $signSchema);
         $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType, $signSchema);
         return new Account($address,$keyPair, $signSchema);
     }
@@ -98,7 +98,7 @@ class Account {
      * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public function sign(Transaction $transaction, $generationHash): Array {
+    public function sign(Transaction $transaction, $generationHash): SignedTransaction {
         return $transaction->signWith($this, $generationHash);
     }
 

@@ -11,7 +11,6 @@ use NEM\Models\Transaction\AccountRestrictionModification;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\blockchain\NetworkType;
-use NEM\Core\Buffer;
 
 
 class AccountRestrictionTransaction {

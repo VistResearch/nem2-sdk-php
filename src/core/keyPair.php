@@ -13,56 +13,21 @@ use \ParagonIE_Sodium_Core_Util as Sodium_Util;
 use NEM\Core\Format\Convert as Convert;
 
 class KeyPair{
-	public $innerPrivateKey; //binary, build by pbk.prk
-	public $innerPublicKey; // binary, pbk
+	private $privateKey; //binary, build by pbk.prk
+	private $publicKey; // binary, pbk
 
   /**
-   * should always build keypair object from this
-   * build a keypair object
-   * @param privateKey (should be a hex string with len = 64)
-   * @returns keyPair object
-   */
-  static function createFromPrivateKey(string $privateKey,string $signSchema = "SHA3"): keyPair{
-    $innerPrivateKey = keyPair::generateInnerPrivatekey($privateKey, $signSchema);
-    return new KeyPair($innerPrivateKey, $signSchema);
+     * Creates a key pair from a private key string.
+     * @param {string} privateKeyString A hex encoded private key string.
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
+     * @returns {module:crypto/keyPair~KeyPair} The key pair.
+     */
+
+  static function createKeyPairFromPrivateKeyString(string $privateKey,string $signSchema = "SHA3"): keyPair{
+    $Publicbkey = keyPair::privatekeyToPublicbkey($privateKey, $signSchema);
+    return new KeyPair($privateKey, $Publicbkey);
   }
 
-    /**
-     * private key transfer
-     * @param privateKey (should be a hex string with len = 64)
-     * @returns Publickey (hex string with len = 64)
-     */
-	static function privatekeyToPublicbkey(string $privateKey,string $signSchema = "SHA3"): string{
-    if ($signSchema !== "SHA3"){
-      // For Keccak reverse
-      $privateKey = Convert::hexToUint8Reverse($privateKey); 
-      $privateKey = Convert::uint8ToHex($privateKey);      
-    }
-		$secretKey = Sodium_Util::hex2bin($privateKey);
-
-		if (PHP_INT_SIZE === 4) {
-           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey, $signSchema);
-       	} else {
-           $publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
-       	}
-
-		return bin2hex($publicKey);
-	}
-
-
-    /**
-     * build a new keypair object with random seed
-     * @param seed (int)
-     * @returns keyPair object
-     */
-	static function generateNewPair(int $seed = 0): keyPair{
-		if (PHP_INT_SIZE === 4) {
-            $innerPrivateKey = Ed25519_32::keypair($seed);
-       	} else {
-            $innerPrivateKey = Ed25519::keypair($seed);
-       	}
-       	return new KeyPair($innerPrivateKey, $signSchema);
-	}
 
     /**
      * verify if this signature valid
@@ -75,11 +40,7 @@ class KeyPair{
 		$sig = hex2bin($signature);
 		$pbk = hex2bin($publicKey);
 
-		if (PHP_INT_SIZE === 4) {
-           return Ed25519_32::verify_detached($sig, $message, $pbk, $signSchema);
-        } else {
-           return Ed25519::verify_detached($sig, $message, $pbk, $signSchema);
-        }		
+    return Ed25519::verify_detached($sig, $message, $pbk, $signSchema);	
 	}
 
     /**
@@ -87,35 +48,56 @@ class KeyPair{
      * @returns {string} (hex string with len = 128)
      */
   static function signData(string $message,KeyPair $signer,string $signSchema = "SHA3"): string{
-
-    if (PHP_INT_SIZE === 4) {
-           $sig = Ed25519_32::sign_detached($message, $signer->innerPrivateKey, $signSchema);
-        } else {
-           $sig = Ed25519::sign_detached($message, $signer->innerPrivateKey, $signSchema);
-        }
+    $innerPrivateKey = $this->generateInnerPrivatekey($signer->getPrivateKey(),$signSchema);
+    $sig = Ed25519::sign_detached($message, $innerPrivateKey, $signSchema);
     return bin2hex($sig);
   }
-
-
 
 
   /**
    * return publickey of this keypair
    * @returns {string} hex string with len = 64
    */
-	public function getPublicKey(): string{
-		return strtoupper(bin2hex($this->innerPublicKey));
-	}
+  public function getPublicKey(): string{
+    return $this->publicKey;
+  }
 
     /**
      * return PrivateKey of this keypair
      * @returns {string} (hex string with len = 64)
      */
-	public function getPrivateKey(): string{
-		return strtoupper(bin2hex(substr($this->innerPrivateKey,0,32)));
-	}
+  public function getPrivateKey(): string{
+    return $this->privateKey;
+  }
+
+    /**
+     * private key transfer
+     * @param privateKey (should be a hex string with len = 64)
+     * @returns Publickey (hex string with len = 64)
+     */
+  static function privatekeyToPublicbkey(string $privateKey,string $signSchema = "SHA3"): string{
+    if ($signSchema !== "SHA3"){
+      // For Keccak reverse
+      $privateKey = Convert::hexToUint8Reverse($privateKey); 
+      $privateKey = Convert::uint8ToHex($privateKey);      
+    }
+    $secretKey = Sodium_Util::hex2bin($privateKey);
+
+    $publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
+
+    return bin2hex($publicKey);
+  }
 
 
+    /**
+     * build a new keypair object with random seed
+     * @param seed (int)
+     * @returns keyPair object
+     */
+  static function generateNewPair(int $seed = 0): keyPair
+      $innerPrivateKey = Ed25519::keypair($seed);      
+      return new KeyPair($innerPrivateKey, $signSchema);
+  }
 
 	private function generateInnerPrivatekey(string $privateKey,string $signSchema = "SHA3"): string{
     if (strlen($privateKey) != 64){
@@ -129,23 +111,15 @@ class KeyPair{
     $secretKey = Sodium_Util::hex2bin($privateKey);
 
 
-		if (PHP_INT_SIZE === 4) {
-           $publicKey = Ed25519_32::publickey_from_secretkey($secretKey, $signSchema);
-       	} else {
-           $publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
-       	}
-       return $secretKey.$publicKey;
+		$publicKey = Ed25519::publickey_from_secretkey($secretKey, $signSchema);
+    return $secretKey.$publicKey;
 	}
-    /**
-     * please don't directly call this to build a keypair
-     */
-  function __construct(string $innerPrivateKey,string $signSchema = "SHA3") {
-      $this->innerPrivateKey = $innerPrivateKey;
-      if (PHP_INT_SIZE === 4) {
-        $this->innerPublicKey = Ed25519_32::publickey_from_secretkey($innerPrivateKey, $signSchema);
-    	}
-    	else{
-    		$this->innerPublicKey = Ed25519::publickey_from_secretkey($innerPrivateKey, $signSchema);
-    	}
+
+  /**
+   * please don't directly call this to build a keypair
+   */
+  function __construct(string $PrivateKey,string $Publicbkey) {
+      $this->PrivateKey = $PrivateKey;
+   		$this->PublicKey = $Publicbkey;
   }
 }

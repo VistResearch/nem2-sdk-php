@@ -2,9 +2,9 @@
 
 namespace NEM\Models\Transaction;
 
-use NEM\Models\Account\Account';
-use NEM\Models\Transaction\AggregateTransaction';
-use NEM\Models\Transaction\CosignatureSignedTransaction';
+use NEM\Models\Account\Account;
+use NEM\Models\Transaction\AggregateTransaction;
+use NEM\Models\Transaction\CosignatureSignedTransaction;
 
 /**
  * Cosignature transaction is used to sign an aggregate transactions with missing cosignatures.
