@@ -24,8 +24,14 @@ use NEM\Core\Identifier;
 use NEM\Tests\Models\Transaction\TestTransfer;
 use NEM\Tests\Models\Transaction\TestTransaction;
 
-use NEM\Tests\Models\Transaction\AccountAddressRestrictionModificationTransaction;
-use NEM\Core\Format\RawAddress;
+use NEM\Tests\Models\Account\AddressTest;
+
+try{
+	$a = AddressTest::test();
+}
+catch(Exception $e){
+	echo 'Caught exception: '.  $e->getMessage(). "\n";
+}
 
 $prkey = '8D31B712AB28D49591EAF5066E9E967B44507FC19C3D54D742F7B3A255CFF4AB';
 $pbkey = '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1B';
@@ -38,36 +44,39 @@ $generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B
 
 
 
+
+
+
 // $aa = $char1->signData("00");
 // var_dump();
 // var_dump($char1->getPublicKey());
 // print(TransactionStatus::test());
-$D = Deadline::createFromDTO([0, 0]);
-$AD = Address::createFromRawAddress("NB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3");
-$MM = new MosaicId([3294802500, 2243684972]);
-$M = new Mosaic($MM, UInt64::fromUint(2));
-$P = PlainMessage::create('112345678975432q345678975432456786o57i64uehrgfhj2e4rfwegdsbfd23');
-// var_dump($D->toDTO());s
-$a = TransferTransaction::create($D,$AD,[$M],$P,NetworkType::MIJIN_TEST);
-// if($a instanceof TransferTransaction){
-// 	print("QQ\n");
-// }
-$arra = $a->serialize();
-// var_dump(Convert::uint8ToHex($arra));
-// for($i = 145; $i < sizeof($arra); $i += 1){
-// 	print($i." ".$arra[$i]."\n");
-// }
-// $hx = Convert::uint8ToHex($arra);
-// print($hx);
+// $D = Deadline::createFromDTO([0, 0]);
+// $AD = Address::createFromRawAddress("NB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3");
+// $MM = new MosaicId([3294802500, 2243684972]);
+// $M = new Mosaic($MM, UInt64::fromUint(2));
+// $P = PlainMessage::create('112345678975432q345678975432456786o57i64uehrgfhj2e4rfwegdsbfd23');
+// // var_dump($D->toDTO());s
+// $a = TransferTransaction::create($D,$AD,[$M],$P,NetworkType::MIJIN_TEST);
+// // if($a instanceof TransferTransaction){
+// // 	print("QQ\n");
+// // }
+// $arra = $a->serialize();
+// // var_dump(Convert::uint8ToHex($arra));
+// // for($i = 145; $i < sizeof($arra); $i += 1){
+// // 	print($i." ".$arra[$i]."\n");
+// // }
+// // $hx = Convert::uint8ToHex($arra);
+// // print($hx);
 
-$acc = Account::createFromPrivateKey($prkey,NetworkType::MIJIN_TEST,"SHA3");
-$a->signer = Convert::HexTouint8($acc->publicKey());
+// $acc = Account::createFromPrivateKey($prkey,NetworkType::MIJIN_TEST,"SHA3");
+// $a->signer = Convert::HexTouint8($acc->publicKey());
 
-$aa = $a->aggregateTransaction();
-// print(Convert::uint8ToHex($aa)."\n");
-// print_r(TestTransfer::Test());
-// print_r(TestTransaction::staticMosaic());
-print_r(Identifier::generateSubNamespaceId([0,0],"cat"));
+// $aa = $a->aggregateTransaction();
+// // print(Convert::uint8ToHex($aa)."\n");
+// // print_r(TestTransfer::Test());
+// // print_r(TestTransaction::staticMosaic());
+// print_r(Identifier::generateSubNamespaceId([0,0],"cat"));
 
 // $a->build();
 // $arr = [3140358708,1127590827,2852126720];

@@ -1,12 +1,9 @@
 <?php
 
-
 use NEM\Models\Account\Account;
-use NEM\core\keyPair;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Account\Address;
 use NEM\Models\Blockchain\NetworkType;
-
 
 
 class AccountTest{
@@ -16,7 +13,7 @@ class AccountTest{
         "publicKey" => 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe',
     ];
 
-    static function Test(){
+    public function Test(){
         
         $account = Account::createFromPrivateKey($this->accountInformation["privateKey"],NetworkType::MIJIN_TEST);
 
