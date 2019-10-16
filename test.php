@@ -24,10 +24,10 @@ use NEM\Core\Identifier;
 use NEM\Tests\Models\Transaction\TestTransfer;
 use NEM\Tests\Models\Transaction\TestTransaction;
 
-use NEM\Tests\Models\Account\AddressTest;
+use NEM\Tests\Models\Account\PublicAccountTest;
 
 try{
-	$a = AddressTest::test();
+	$a = PublicAccountTest::test();
 }
 catch(Exception $e){
 	echo 'Caught exception: '.  $e->getMessage(). "\n";

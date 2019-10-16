@@ -48,7 +48,7 @@ class KeyPair{
      * @returns {string} (hex string with len = 128)
      */
   static function signData(string $message,KeyPair $signer,string $signSchema = "SHA3"): string{
-    $innerPrivateKey = $this->generateInnerPrivatekey($signer->getPrivateKey(),$signSchema);
+    $innerPrivateKey = self::generateInnerPrivatekey($signer->getPrivateKey(),$signSchema);
     $sig = Ed25519::sign_detached($message, $innerPrivateKey, $signSchema);
     return bin2hex($sig);
   }
@@ -94,7 +94,7 @@ class KeyPair{
      * @param seed (int)
      * @returns keyPair object
      */
-  static function generateNewPair(int $seed = 0): keyPair
+  static function generateNewPair(int $seed = 0): keyPair{
       $innerPrivateKey = Ed25519::keypair($seed);      
       return new KeyPair($innerPrivateKey, $signSchema);
   }
@@ -119,7 +119,7 @@ class KeyPair{
    * please don't directly call this to build a keypair
    */
   function __construct(string $PrivateKey,string $Publicbkey) {
-      $this->PrivateKey = $PrivateKey;
-   		$this->PublicKey = $Publicbkey;
+      $this->privateKey = $PrivateKey;
+   		$this->publicKey = $Publicbkey;
   }
 }

@@ -2,9 +2,10 @@
 
 namespace NEM\Models\Account;
 
-$Hash512 = 64;
+use NEM\Core\Keypair;
 
 class PublicAccount {
+    const Hash512 = 64;
 
     private $publicKey;
     private $address;
@@ -38,14 +39,14 @@ class PublicAccount {
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
     public function verifySignature(string $data, string $signature, string $signSchema = "SHA3"): bool {
-        if (strlen($signature)/ 2 != $Hash512) {
+        if (strlen($signature)/ 2 != self::Hash512) {
             throw new Error('Signature length is incorrect');
         }
 
         if (!ctype_xdigit($signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
-        return KeyPair::verify($this->publicKey, $data, $signature, $signSchema);
+        return KeyPair::verify($signature, $data, $this->publicKey, $signSchema);
     }
 
     /**
@@ -73,8 +74,8 @@ class PublicAccount {
                 "address"=>$this->address->toDTO()];
     }
 
-    // static function fromDTO($DTOArray): PublicAccount{
-    //     return new PublicAccount($DTOArray["publicKey"],$DTOArray["address"]);
-    // }
+    static function fromDTO($DTOArray): PublicAccount{
+        return new PublicAccount($DTOArray["publicKey"],Address::fromDTO($DTOArray["address"]));
+    }
 
 }

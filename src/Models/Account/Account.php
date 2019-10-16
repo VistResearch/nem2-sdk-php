@@ -81,7 +81,7 @@ class Account {
      * @return {PublicAccount}
      */
     public function publicAccount(): PublicAccount {
-        return PublicAccount::createFromPublicKey($this->publicKey, $this->address->networkType, $this->signSchema);
+        return PublicAccount::createFromPublicKey($this->publicKey(), $this->address->networkType(), $this->signSchema);
     }
 
     /**
