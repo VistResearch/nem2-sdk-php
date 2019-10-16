@@ -21,7 +21,6 @@ class MosaicId{
         }
 	}
 
-	//  TODO : not sure how this work
     /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
      *

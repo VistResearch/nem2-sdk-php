@@ -5,15 +5,14 @@ namespace NEM\Tests\Models\Mosaic;
 use NEM\Models\Mosaic\Mosaic;
 
 // input source
-use NEM\Models\UInt64;
-use NEM\Models\Mosaic\MosaicId;
-use NEM\Models\NEMnamespace\NamespaceId;
+use NEM\Models\Id;
+use NEM\Core\Identifier;
 
 
 // Exception
 use Exception;
 
-class MosaicTest{
+class MosaicIdTest{
 	public function test(){
 
 		$testMosaicId = new MosaicId([0,0]);

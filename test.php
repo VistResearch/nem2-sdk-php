@@ -24,10 +24,10 @@ use NEM\Core\Identifier;
 use NEM\Tests\Models\Transaction\TestTransfer;
 use NEM\Tests\Models\Transaction\TestTransaction;
 
-use NEM\Tests\Models\Account\PublicAccountTest;
+use NEM\Tests\Models\Mosaic\MosaicTest;
 
 try{
-	$a = PublicAccountTest::test();
+	$a = MosaicTest::test();
 }
 catch(Exception $e){
 	echo 'Caught exception: '.  $e->getMessage(). "\n";
