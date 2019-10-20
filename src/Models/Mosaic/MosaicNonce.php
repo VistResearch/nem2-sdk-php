@@ -2,6 +2,8 @@
 
 namespace NEM\Models\Mosaic;
 
+
+use Exception;
 class MosaicNonce {
 
     /**

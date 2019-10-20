@@ -4,6 +4,8 @@ namespace NEM\Models\Mosaic;
 
 use NEM\Models\Id;
 use NEM\Core\Identifier;
+use NEM\Models\Mosaic\MosaicNonce;
+use NEM\Models\Account\PublicAccount;
 
 class MosaicId{
 
@@ -29,7 +31,7 @@ class MosaicId{
      * @return  {MosaicId}
      */
     public static function createFromNonce(MosaicNonce $nonce, PublicAccount $owner): MosaicId {
-        $mosaicId = Identifier::generateMosaicId($nonce->nonce, $owner->publicKey);
+        $mosaicId = Identifier::generateMosaicId($nonce->nonce, $owner->publicKey());
         return new MosaicId($mosaicId);
     }
 

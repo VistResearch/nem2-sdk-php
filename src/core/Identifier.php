@@ -9,13 +9,15 @@ use Exception;
 
 class Identifier{
 	static function packUint8(Array $input): Array{
+		$input = array_values($input);
+
 		if(sizeof($input)%4 != 0){
 			throw new Exception("wrong format uint8 array to pack\n");
 		}
 
 		$output = [];
 		$t = 0;
-		for($i = 0; $i<sizeof($input); $i += 1){
+		for($i = 0; $i < sizeof($input) ; $i += 1){
 			$t += $input[$i] << (8 *($i%4));
 			if($i%4 == 3){
 				array_push($output, $t);
@@ -26,23 +28,24 @@ class Identifier{
 	}
 
 	static function validNamesapceName(string $name): bool{
-
-
 		return ctype_alnum($name);
 	}
 
-	static function generateMosaicId(MosaicNonce $nonce, string $pbkey): Array{
-		$data = array_merge($nonce->nonce , unpack("C*",hex2bin($pbkey) ) );
-			$result = hash('sha3-256', pack("C*" , ...$data));
+	static function generateMosaicId(Array $nonce, string $pbkey): Array{
+		$pbkeyArray = unpack("C*",hex2bin($pbkey));
+		$nonceStr = pack("C*",...$nonce);
+		$pbkeyStr = pack("C*",...$pbkeyArray);
 
-		// little endian
-		$tmp0 = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
-		$tmp0 = hexdec($tmp0[1]);
+		$h = hash_init('sha3-256');
+		hash_update($h, $nonceStr);
+		hash_update($h, $pbkeyStr);
 
-		$tmp1 = unpack("H*", strrev(pack("H*", substr($hash,0,16))));
-		$tmp1 = hexdec($tmp1[1]);
+		$resultArray = Convert::hexToUint8(hash_final($h));
+		
+		$uint32Array = self::packUint8($resultArray);
 
-		return [$tmp0, $tmp1 & 0x7FFFFFFF];
+
+		return [$uint32Array[0], $uint32Array[1] & 0x7FFFFFFF];
 	}
 
 	static function generateNamespaceId(string $name): Array{
