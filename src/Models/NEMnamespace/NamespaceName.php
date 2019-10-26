@@ -1,8 +1,8 @@
 <?php
 
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
-use NEM\Models\Namespace\NamespaceId;
+use NEM\Models\NEMnamespace\NamespaceId;
 
 /**
  * The namespace name info structure describes basic information of a namespace and name.

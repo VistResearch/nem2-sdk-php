@@ -1,6 +1,6 @@
 <?php
 
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
 /**
  * Namespace type. Supported types are:

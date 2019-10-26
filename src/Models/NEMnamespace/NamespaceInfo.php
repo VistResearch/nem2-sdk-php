@@ -1,9 +1,9 @@
 <?php
 
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
-use NEM\Models\Namespace\NamespaceId;
-use NEM\Models\Namespace\Alias;
+use NEM\Models\NEMnamespace\NamespaceId;
+use NEM\Models\NEMnamespace\Alias;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\UInt64;
 

@@ -4,9 +4,9 @@
  * 0: Link an alias.
  * 1: Unlink an alias.
  */
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
-class AliasActionType {
+class AliasAction {
     const Link = 0;
     const Unlink = 1;
 }

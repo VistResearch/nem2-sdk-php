@@ -1,8 +1,8 @@
 <?php
 
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
-use NEM\Models\Namespace\Alias;
+use NEM\Models\NEMnamespace\Alias;
 use NEM\Models\Mosaic\MosaicId;
 
 class MosaicAlias extends Alias {

@@ -7,7 +7,7 @@
  *
  * @since 0.10.2
  */
-namespace NEM\Models\Namespace;
+namespace NEM\Models\NEMnamespace;
 
 class AliasType {
     const None = 0;
