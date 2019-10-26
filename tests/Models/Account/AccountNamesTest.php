@@ -1,27 +1,27 @@
 <?php 
 
+// phpUint
+use PHPUnit\Framework\TestCase;
+
 // Test target
 use NEM\Models\Account\AccountNames;
 
 // input source
-use NEM\Models\Account\Addresss;
+use NEM\Models\Account\Address;
 
 // Test data
-use NEM\tests\TestAccountInfo;
+use NEM\Tests\TestInfo;
 
-class AccountNamesTest{
+class AccountNamesTest extends TestCase{
 
 
-    public function Test(){
+    public function test(){
 
-        $testAddress = Address::createFromRawAddress(TestAccountInfo::address);
+        $testAddress = Address::createFromRawAddress(TestInfo::address);
 
         $AccName = new AccountNames($testAddress, []);
 
-    	if(!($AccInfo instanceof AccountNames)){
-    		throw new Exception("AccountInfo building failed\n");
-    	}
+        $this->assertEquals($AccName instanceof AccountNames, true);
 
-    	return True;
     }
 }

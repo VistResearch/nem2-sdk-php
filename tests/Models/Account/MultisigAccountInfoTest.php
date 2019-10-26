@@ -1,6 +1,7 @@
 <?php
 
-namespace NEM\Tests\Models\Account;
+// phpUint
+use PHPUnit\Framework\TestCase;
 
 // Test Target
 use NEM\Models\Account\MultisigAccountInfo;
@@ -9,15 +10,13 @@ use NEM\Models\Account\MultisigAccountInfo;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;
 
+
 // Test data
-use NEM\Tests\Models\TestAccountInfo;
+use NEM\Tests\TestInfo;
 
-// Exception
-use Exception;
-
-class MultisigAccountInfoTest{
-	static function test(){
-		$testpbAcc = PublicAccount::createFromPublicKey(TestAccountInfo::publicKey,NetworkType::MIJIN_TEST);
+class MultisigAccountInfoTest extends TestCase{
+	public function test(){
+		$testpbAcc = PublicAccount::createFromPublicKey(TestInfo::publicKey,NetworkType::MIJIN_TEST);
 		$cosignatories = [PublicAccount::createFromPublicKey('53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1B',NetworkType::MIJIN_TEST)];
 
 		$minApproval = 0;
@@ -26,42 +25,26 @@ class MultisigAccountInfoTest{
 
 		$testTarget = new MultisigAccountInfo($testpbAcc, $cosignatories, $minApproval, $minRemoval, $multisigAccounts);
 
-		if(!($testTarget instanceof MultisigAccountInfo)){
-			throw new Exception("build failed\n");
-		}
+		$this->assertEquals($testTarget instanceof MultisigAccountInfo, true);
 
-		if($testTarget->isMultisig()){
-			throw new Exception("isMultisig() failed for false return value\n");
-		}
+		$this->assertEquals($testTarget->isMultisig(), false);
 
-		if(!$testTarget->hasCosigner($cosignatories[0])){
-			throw new Exception("hasCosigner() failed for true return value\n");
-		}
+		$this->assertEquals($testTarget->hasCosigner($cosignatories[0]), true);
 
-		if($testTarget->hasCosigner($multisigAccounts[0])){
-			throw new Exception("hasCosigner() failed for false return value\n");
-		}
+		$this->assertEquals($testTarget->hasCosigner($multisigAccounts[0]), false);
 
 
-		if(!$testTarget->isCosignerOfMultisigAccount($multisigAccounts[0])){
-			throw new Exception("isCosignerOfMultisigAccount() failed for true return value\n");
-		}
+		$this->assertEquals($testTarget->isCosignerOfMultisigAccount($multisigAccounts[0]), true);
 
-		if($testTarget->isCosignerOfMultisigAccount($cosignatories[0])){
-			throw new Exception("isCosignerOfMultisigAccount() failed for false return value\n");
-		}
+		$this->assertEquals($testTarget->isCosignerOfMultisigAccount($cosignatories[0]), false);
 
 		$minApproval = 1;
 		$minRemoval = 2;
 		$testTarget = new MultisigAccountInfo($testpbAcc, $cosignatories, $minApproval, $minRemoval, $multisigAccounts);
 
-		if(!($testTarget instanceof MultisigAccountInfo)){
-			throw new Exception("second build failed\n");
-		}
+		$this->assertEquals($testTarget instanceof MultisigAccountInfo, true);
 
-		if(!$testTarget->isMultisig()){
-			throw new Exception("isMultisig() failed for true return value\n");
-		}
+		$this->assertEquals($testTarget->isMultisig(), true);
 
 	}
 }

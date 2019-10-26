@@ -1,6 +1,7 @@
 <?php 
 
-namespace NEM\Tests\Models\Account;
+// phpUint
+use PHPUnit\Framework\TestCase;
 
 // Test target
 use NEM\Models\Account\PublicAccount;
@@ -11,50 +12,35 @@ use NEM\Models\Account\Account;
 use NEM\Models\Account\Address;
 
 // Test data
-use NEM\Tests\Models\TestAccountInfo;
-
-// Exception
-use Exception;
+use NEM\Tests\TestInfo;
 
 
-class PublicAccountTest{
+
+class PublicAccountTest extends TestCase{
 
 
-    public function Test(){ 
-        $testTarget = PublicAccount::createFromPublicKey(TestAccountInfo::publicKey,NetworkType::MIJIN_TEST);
+    public function test(){ 
+        $testTarget = PublicAccount::createFromPublicKey(TestInfo::publicKey,NetworkType::MIJIN_TEST);
 
-        if(!($testTarget instanceof PublicAccount)){
-            throw new Exception("build failed\n");
-        }
+        
+        $this->assertEquals($testTarget instanceof PublicAccount, true);
 
-    	$account = Account::createFromPrivateKey(TestAccountInfo::privateKey,NetworkType::MIJIN_TEST);
-        $addr = Address::createFromPublicKey(TestAccountInfo::publicKey,NetworkType::MIJIN_TEST);
+    	$account = Account::createFromPrivateKey(TestInfo::privateKey,NetworkType::MIJIN_TEST);
+        $addr = Address::createFromPublicKey(TestInfo::publicKey,NetworkType::MIJIN_TEST);
         $signed = $account->signData('catapult rocks!');
         $testTarget = $account->publicAccount();
 
-        if(!$testTarget->verifySignature('catapult rocks!',$signed)){
-            throw new Exception("verifySignature() method failed\n");
-        }
+        $this->assertEquals($testTarget->verifySignature('catapult rocks!',$signed), true);
 
-        if(!$testTarget->equals($testTarget)){
-            throw new Exception("equals() method failed\n");
-        }
+        $this->assertEquals($testTarget->equals($testTarget), true);
 
-        if(!($testTarget->publicKey() === TestAccountInfo::publicKey)){
-            throw new Exception("publicKey() method failed\n");
-        }
+        $this->assertEquals($testTarget->publicKey(), TestInfo::publicKey);
 
-        if(!($testTarget->address()->equals($addr))){
-            throw new Exception("address() method failed\n");
-        }
+        $this->assertEquals($testTarget->address()->equals($addr), true);
 
         $testTarget_DTO = PublicAccount::fromDTO($testTarget->toDTO());
-        if(!($testTarget_DTO->equals($testTarget))){
-            throw new Exception("DTO methods failed\n");
-            
-        }
+        $this->assertEquals($testTarget_DTO->equals($testTarget), true);
 
 
-    	return True;
     }
 }

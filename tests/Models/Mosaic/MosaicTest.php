@@ -1,5 +1,6 @@
 <?php
-namespace NEM\Tests\Models\Mosaic;
+// phpUint
+use PHPUnit\Framework\TestCase;
 
 // Test Target
 use NEM\Models\Mosaic\Mosaic;
@@ -13,7 +14,7 @@ use NEM\Models\NEMnamespace\NamespaceId;
 // Exception
 use Exception;
 
-class MosaicTest{
+class MosaicTest extends TestCase{
 	public function test(){
 
 		$testMosaicId = new MosaicId([0,0]);
@@ -22,10 +23,7 @@ class MosaicTest{
 
 		$testTarget = new Mosaic($testMosaicId, $amount);
 
-		if(!($testTarget instanceof Mosaic)){
-			throw new Exception("Build failed\n");		
-		}
-		return True;
+		$this->assertEquals($testTarget instanceof Mosaic, true);
 
 	}
 

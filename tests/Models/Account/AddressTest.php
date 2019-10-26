@@ -1,6 +1,7 @@
 <?php 
 
-namespace NEM\Tests\Models\Account;
+// phpUint
+use PHPUnit\Framework\TestCase;
 
 // Test target
 use NEM\Models\Account\Address;
@@ -9,74 +10,48 @@ use NEM\Models\Account\Address;
 use NEM\Models\Blockchain\NetworkType;
 
 // Test data
-use NEM\Tests\Models\TestAccountInfo;
-
-// Exception
-use Exception;
+use NEM\Tests\TestInfo;
 
 
-class AddressTest{
 
 
-    public function Test(){
+class AddressTest extends TestCase{
+
+
+    public function test(){
 
         // $testAddress = Address::createFromRawAddress(TestAccountInfo::address);
 
-        $Addr = Address::createFromPublicKey(TestAccountInfo::publicKey,NetworkType::MIJIN_TEST);
+        $Addr = Address::createFromPublicKey(TestInfo::publicKey,NetworkType::MIJIN_TEST);
 
-    	if(!($Addr instanceof Address)){
-    		throw new Exception("createFromPublicKey() method failed\n");
-    	}
+    	$this->assertEquals($Addr instanceof Address, true);
 
-    	if($Addr->networkType() != NetworkType::MIJIN_TEST){
-    		throw new Exception("FromPublicKey networkType() method failed\n");
-    	}
+    	$this->assertEquals($Addr->networkType(), NetworkType::MIJIN_TEST);
 
-    	if($Addr->plain() != "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2"){
-    		throw new Exception("FromPublicKey plain() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->plain(), "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2");
 
 
-    	if($Addr->pretty() != "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2"){
-    		throw new Exception("FromPublicKey pretty() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->pretty(), "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2");
 
     	$Addr = Address::createFromRawAddress("SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2");
 
-    	if(!($Addr instanceof Address)){
-    		throw new Exception("createFromRawAddress() method failed\n");
-    	}
+    	$this->assertEquals($Addr instanceof Address, true);
 
-    	if($Addr->networkType() != NetworkType::MIJIN_TEST){
-    		throw new Exception("FromRawAddress networkType() method failed\n");
-    	}
+    	$this->assertEquals($Addr->networkType(), NetworkType::MIJIN_TEST);
 
-    	if($Addr->plain() != "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2"){
-    		throw new Exception("FromRawAddress plain() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->plain(), "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2");
 
-    	if($Addr->pretty() != "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2"){
-    		throw new Exception("FromRawAddress pretty() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->pretty(), "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2");
 
     	$Addr = Address::FromDTO($Addr->toDTO());
 
-    	if(!($Addr instanceof Address)){
-    		throw new Exception("DTO method() failed\n");
-    	}
+    	$this->assertEquals($Addr instanceof Address, true);
 
-    	if($Addr->networkType() != NetworkType::MIJIN_TEST){
-    		throw new Exception("DTO networkType() method failed\n");
-    	}
+    	$this->assertEquals($Addr->networkType(), NetworkType::MIJIN_TEST);
 
-    	if($Addr->plain() != "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2"){
-    		throw new Exception("DTO plain() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->plain(), "SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2");
 
-    	if($Addr->pretty() != "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2"){
-    		throw new Exception("DTO pretty() method failed\n");    		
-    	}
+    	$this->assertEquals($Addr->pretty(), "SCTVW2-3D2MN5-VE4AQ4-TZIDZE-NGNOZX-PRPRLI-KCF2");
 
-    	return True;
     }
 }

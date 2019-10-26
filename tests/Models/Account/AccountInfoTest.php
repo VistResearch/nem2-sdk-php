@@ -1,24 +1,27 @@
 <?php 
 
+// phpUint
+use PHPUnit\Framework\TestCase;
+
 // Test target
 use NEM\Models\Account\AccountInfo;
 
 // input source
-use NEM\Models\Account\Addresss;
+use NEM\Models\Account\Address;
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\UInt64;
 use NEM\Models\Mosaic\NetworkCurrencyMosaic;
 
 // Test data
-use NEM\tests\TestAccountInfo;
+use NEM\Tests\TestInfo;
 
-class AccountInfoTest{
+class AccountInfoTest extends TestCase{
 
 
-    public function Test(){
-    	$testAddress = Address::createFromRawAddress(TestAccountInfo::address);
+    public function test(){
+    	$testAddress = Address::createFromRawAddress(TestInfo::address);
     	$addressH = UInt64::fromUint(1024);
-    	$pbkey = TestAccountInfo::publicKey;
+    	$pbkey = TestInfo::publicKey;
     	$pbkeyH = UInt64::fromUint(1025);
     	$mosaics = [NetworkCurrencyMosaic::createRelative(100)];
     	$importance = UInt64::fromUint(1026);
@@ -26,16 +29,10 @@ class AccountInfoTest{
 
     	$AccInfo = new AccountInfo($testAddress, $addressH, $pbkey, $pbkeyH, $mosaics, $importance, $importanceH);
 
-    	if(!($AccInfo instanceof AccountInfo)){
-    		throw new Exception("AccountInfo building failed\n");
-    	}
+    	$this->assertEquals($AccInfo instanceof AccountInfo, true);
 
     	$pbAccount = $AccInfo->publicAccount();
 
-    	if(!($pbAccount instanceof PublicAccount)){
-    		throw new Exception("AccountInfo publicAccount method failed\n");
-    	}
-
-    	return True;
+        $this->assertEquals($pbAccount instanceof PublicAccount, true);
     }
 }
