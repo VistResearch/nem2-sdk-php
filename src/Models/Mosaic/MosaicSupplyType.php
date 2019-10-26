@@ -2,7 +2,7 @@
 
 namespace NEM\Models\Mosiac;
 
-class MosaicSupplyType {
+class MosaicSupplyChangeAction {
     const Decrease = 0;
     const Increase = 1;
 }

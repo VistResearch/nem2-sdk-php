@@ -24,7 +24,7 @@ class KeyPair{
      */
 
   static function createKeyPairFromPrivateKeyString(string $privateKey,string $signSchema = "SHA3"): keyPair{
-    $Publicbkey = keyPair::privatekeyToPublicbkey($privateKey, $signSchema);
+    $Publicbkey = keyPair::privatekeyToPublickey($privateKey, $signSchema);
     return new KeyPair($privateKey, $Publicbkey);
   }
 
@@ -75,7 +75,7 @@ class KeyPair{
      * @param privateKey (should be a hex string with len = 64)
      * @returns Publickey (hex string with len = 64)
      */
-  static function privatekeyToPublicbkey(string $privateKey,string $signSchema = "SHA3"): string{
+  static function privatekeyToPublickey(string $privateKey,string $signSchema = "SHA3"): string{
     if ($signSchema !== "SHA3"){
       // For Keccak reverse
       $privateKey = Convert::hexToUint8Reverse($privateKey); 
@@ -89,15 +89,6 @@ class KeyPair{
   }
 
 
-    /**
-     * build a new keypair object with random seed
-     * @param seed (int)
-     * @returns keyPair object
-     */
-  static function generateNewPair(int $seed = 0): keyPair{
-      $innerPrivateKey = Ed25519::keypair($seed);      
-      return new KeyPair($innerPrivateKey, $signSchema);
-  }
 
 	private function generateInnerPrivatekey(string $privateKey,string $signSchema = "SHA3"): string{
     if (strlen($privateKey) != 64){

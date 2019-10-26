@@ -53,7 +53,7 @@ class NetworkCurrencyMosaic extends Mosaic {
      * @param amount
      */
     private function __construct(UInt64 $amount) {
-        parent::__construct($amount, NetworkCurrencyMosaic::NAMESPACE_ID());
+        parent::__construct(NetworkCurrencyMosaic::NAMESPACE_ID(), $amount);
     }
 
     /**

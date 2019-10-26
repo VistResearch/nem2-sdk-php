@@ -4,8 +4,8 @@ namespace NEM\Models\Transaction;
 
 use NEM\Models\Account\PublicAccount;
 use NEM\Models\Blockchain\NetworkType;
-use NEM\Models\Namespace\NamespaceId;
-use NEM\Models\Namespace\NamespaceType;
+use NEM\Models\NEMnamespace\NamespaceId;
+use NEM\Models\NEMnamespace\NamespaceType;
 use NEM\Models\UInt64;
 use NEM\Models\Transaction\Deadline;
 use NEM\Models\Transaction\Transaction;

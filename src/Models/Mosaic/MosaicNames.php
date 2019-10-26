@@ -3,7 +3,7 @@
 namespace NEM\Models\Mosiac;
 
 use NEM\Models\Mosiac\MosaicId;
-use NEM\Models\Namespace\NamespaceId;
+use NEM\Models\NEMnamespace\NamespaceId;
 
 /**
  * Mosaic with linked names

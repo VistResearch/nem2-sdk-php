@@ -13,7 +13,6 @@ use NEM\Models\Transaction\TransactionInfo;
 use NEM\Models\Transaction\TransactionType;
 use NEM\Models\Transaction\TransactionVersion;
 
-use NEM\Core\SerializeBase;
 use NEM\Infrastructure\Buffer\AccountRestrictionsEntityTypeTransactionBuffer as Buffer;
 
 class AccountOperationRestrictionModificationTransaction extends Transaction {

@@ -3,7 +3,7 @@
 namespace NEM\Models\Account;
 
 use NEM\Models\Account\Addresss;
-use NEM\Models\Namespace\NamespaceName;
+use NEM\Models\NEMnamespace\NamespaceName;
 
 class AccountNames {
 
@@ -21,7 +21,7 @@ class AccountNames {
                 /**
                  * Account Address
                  */
-                Adrress $address,
+                Address $address,
                 /**
                  * Properties.
                  */

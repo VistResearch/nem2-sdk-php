@@ -4,6 +4,7 @@ namespace NEM\Models\Account;
 
 use NEM\Models\Account\Addresss;
 use NEM\Models\Account\PublicAccount;
+use NEM\Models\UInt64;
 
 class AccountInfo{
     
@@ -16,7 +17,7 @@ class AccountInfo{
     public $importanceHeight; // UInt64
 
 
-    function __construct(Adress $address,UInt64 $addressHeight, string $publicKey,
+    function __construct(Address $address,UInt64 $addressHeight, string $publicKey,
                          UInt64 $publicKeyHeight, Array $mosaics, UInt64 $importance, UInt64 $importanceHeight) {
         $this->address = $address;
         $this->addressHeight = $addressHeight;
@@ -28,7 +29,7 @@ class AccountInfo{
     }
 
     public function publicAccount(): PublicAccount{
-        return PublicAccount::createFromPublicKey($this->publicKey,$this->address->networkType);
+        return PublicAccount::createFromPublicKey($this->publicKey,$this->address->networkType());
     }
 
 } 

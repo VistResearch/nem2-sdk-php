@@ -61,7 +61,9 @@ class Account {
     }
 
     public static function generateNewAccount(int $networkType, string $signSchema = "SHA3"): Account {
-        $keyPair = KeyPair::generateNewPair();
+
+        $prK = bin2hex(random_bytes(32));
+        $keyPair = KeyPair::createKeyPairFromPrivateKeyString($prK);
 
         $address = Address::createFromPublicKey($keyPair->getPublicKey(),$networkType, $signSchema);
 

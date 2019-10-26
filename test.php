@@ -19,19 +19,22 @@ use NEM\Models\Account\Address;
 use NEM\Models\Blockchain\NetworkType;
 use NEM\Models\Account\Account;
 use NEM\Core\Identifier;
-
+use NEM\Models\Account\PublicAccount;
 
 use NEM\Tests\Models\Transaction\TestTransfer;
-use NEM\Tests\Models\Transaction\TestTransaction;
 
-use NEM\Tests\Models\Mosaic\MosaicTest;
+use NEM\Tests\Models\Mosaic\MosaicIdTest;
 
-try{
-	$a = MosaicTest::test();
-}
-catch(Exception $e){
-	echo 'Caught exception: '.  $e->getMessage(). "\n";
-}
+// $a = pack("C*",...$aa);
+// $a = pack("C*",0,0,0,0,0,0,0,0);
+
+// $t = Convert::hexToUint8(hash_final($tmp));
+// $tt = array_slice($t,0,8);
+
+// var_dump($tt);
+
+$a = random_bytes(32);
+var_dump(bin2hex($a));
 
 $prkey = '8D31B712AB28D49591EAF5066E9E967B44507FC19C3D54D742F7B3A255CFF4AB';
 $pbkey = '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1B';

@@ -30,14 +30,14 @@ class MosaicId{
      * @param   owner   {Account}
      * @return  {MosaicId}
      */
-    public static function createFromNonce(MosaicNonce $nonce, PublicAccount $owner): MosaicId {
+    public function createFromNonce(MosaicNonce $nonce, PublicAccount $owner): MosaicId {
         $mosaicId = Identifier::generateMosaicId($nonce->nonce, $owner->publicKey());
         return new MosaicId($mosaicId);
     }
 
-	public function equals($data):bool{
+	public function equals($data): bool{
 		if ($data instanceof MosaicId) {
-            return  $this->Id.equals($data->id);
+            return  $this->id->equals($data->id);
         }
 		return bool(false);
 	}
